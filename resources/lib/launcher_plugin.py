@@ -1508,6 +1508,7 @@ class Main:
                 usock.write("\t\t<id>"+launcherIndex+"</id>\n")
                 # replace low-9 quotation mark by comma
                 usock.write("\t\t<name>"+launcher["name"]+"</name>\n")
+                usock.write("\t\t<category>"+launcher["category"]+"</category>\n")
                 usock.write("\t\t<application>"+launcher["application"]+"</application>\n")
                 usock.write("\t\t<args>"+launcher["args"]+"</args>\n")
                 usock.write("\t\t<rompath>"+launcher["rompath"]+"</rompath>\n")
@@ -1571,6 +1572,7 @@ class Main:
         for launcher in launchers:
             launcherid = re.findall( "<id>(.*?)</id>", launcher )
             name = re.findall( "<name>(.*?)</name>", launcher )
+            category = re.findall( "<category>(.*?)</category>", launcher )
             application = re.findall( "<application>(.*?)</application>", launcher )
             args = re.findall( "<args>(.*?)</args>", launcher )
             rompath = re.findall( "<rompath>(.*?)</rompath>", launcher )
@@ -1598,6 +1600,8 @@ class Main:
             # replace comma by single low-9 quotation mark
             if len(name) > 0 : name = name[0]
             else: name = "unknown"
+            if len(category) > 0 : category = category[0]
+            else: category = "default"
             if len(application) > 0 : application = application[0]
             else: application = ""
             if len(args) > 0 : args = args[0]
@@ -1683,7 +1687,7 @@ class Main:
                 else: romplot = ""
                 if len(romfinished) > 0 : romfinished = romfinished[0]
                 else: romfinished = "false"
-                if len(romaltapp) > 0 : romalapp = romaltapp[0]
+                if len(romaltapp) > 0 : romaltapp = romaltapp[0]
                 else: romaltapp = ""
                 if len(romaltarg) > 0 : romaltarg = romaltarg[0]
                 else: romaltarg = ""
@@ -1711,6 +1715,7 @@ class Main:
             # prepare launcher object data
             launcherdata = {}
             launcherdata["name"] = name
+            launcherdata["category"] = category
             launcherdata["application"] = application
             launcherdata["args"] = args
             launcherdata["rompath"] = rompath
@@ -1740,7 +1745,7 @@ class Main:
     def _get_launchers( self ):
         if (len(self.launchers) > 0):
             for key in sorted(self.launchers, key= lambda x : self.launchers[x]["application"]):
-                self._add_launcher(self.launchers[key]["name"], self.launchers[key]["application"], self.launchers[key]["rompath"], self.launchers[key]["thumbpath"], self.launchers[key]["fanartpath"], self.launchers[key]["trailerpath"], self.launchers[key]["custompath"], self.launchers[key]["romext"], self.launchers[key]["gamesys"], self.launchers[key]["thumb"], self.launchers[key]["fanart"], self.launchers[key]["genre"], self.launchers[key]["release"], self.launchers[key]["studio"], self.launchers[key]["plot"], self.launchers[key]["finished"], self.launchers[key]["lnk"], self.launchers[key]["minimize"], self.launchers[key]["roms"], len(self.launchers), key)
+                self._add_launcher(self.launchers[key]["name"], self.launchers[key]["category"], self.launchers[key]["application"], self.launchers[key]["rompath"], self.launchers[key]["thumbpath"], self.launchers[key]["fanartpath"], self.launchers[key]["trailerpath"], self.launchers[key]["custompath"], self.launchers[key]["romext"], self.launchers[key]["gamesys"], self.launchers[key]["thumb"], self.launchers[key]["fanart"], self.launchers[key]["genre"], self.launchers[key]["release"], self.launchers[key]["studio"], self.launchers[key]["plot"], self.launchers[key]["finished"], self.launchers[key]["lnk"], self.launchers[key]["minimize"], self.launchers[key]["roms"], len(self.launchers), key)
             xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )
             return True
         else:
@@ -2155,7 +2160,7 @@ class Main:
         else:
             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30016 ) % (romsCount, skipCount) + " " + __language__( 30050 )))
 
-    def _add_launcher(self, name, cmd, path, thumbpath, fanartpath, trailerpath, custompath, ext, gamesys, thumb, fanart, genre, release, studio, plot, finished, lnk, minimize, roms, total, key) :
+    def _add_launcher(self, name, category, cmd, path, thumbpath, fanartpath, trailerpath, custompath, ext, gamesys, thumb, fanart, genre, release, studio, plot, finished, lnk, minimize, roms, total, key) :
         if (int(xbmc.getInfoLabel("System.BuildVersion")[0:2]) < 12 ):
             # Dharma / Eden compatible
             display_date_format = "Date"
@@ -2355,6 +2360,7 @@ class Main:
                 # prepare launcher object data
                 launcherdata = {}
                 launcherdata["name"] = title
+                launcherdata["category"] = "default"
                 launcherdata["application"] = app
                 launcherdata["args"] = args
                 launcherdata["rompath"] = ""
@@ -2426,6 +2432,7 @@ class Main:
                         # prepare launcher object data
                         launcherdata = {}
                         launcherdata["name"] = title
+                        launcherdata["category"] = "default"
                         launcherdata["application"] = app
                         launcherdata["args"] = args
                         launcherdata["rompath"] = path
