@@ -91,20 +91,20 @@ class Main:
             argv[0] - the path of the plugin (supplied by XBMC)
             argv[1] - the handle of the plugin (supplied by XBMC)
             argv[2] - one of the following (__language__( 30000 ) and 'rom' can be any launcher name or rom name created with the plugin) :
-                /launcher - open the specific launcher (if exists) and browse its roms
+                /category/launcher - open the specific launcher (if exists) and browse its roms
                             if the launcher is standalone - run it.
-                /launcher/rom - run the specifiec rom using it's launcher.
+                /category/launcher/rom - run the specifiec rom using it's launcher.
                                 ignore command if doesn't exists.
-                /launcher/%%REMOVE%% - remove the launcher
-                /launcher/%%ADD%% - add a new rom (open wizard)
-                /launcher/rom/%%REMOVE%% - remove the rom
-                /%%ADD%% - add a new launcher (open wizard)
-                /launcher/%%GET_INFO%% - get launcher info from configured scraper
-                /launcher/%%GET_THUMB%% - get launcher thumb from configured scraper
-                /launcher/%%GET_FANART%% - get launcher fanart from configured scraper
-                /launcher/rom/%%GET_INFO%% - get rom info from configured scraper
-                /launcher/rom/%%GET_THUMB%% - get rom thumb from configured scraper
-                /launcher/rom/%%GET_FANART%% - get rom fanart from configured scraper
+                /category/launcher/%%REMOVE%% - remove the launcher
+                /category/launcher/%%ADD%% - add a new rom (open wizard)
+                /category/launcher/rom/%%REMOVE%% - remove the rom
+                /category/%%ADD%% - add a new launcher (open wizard)
+                /category/launcher/%%GET_INFO%% - get launcher info from configured scraper
+                /category/launcher/%%GET_THUMB%% - get launcher thumb from configured scraper
+                /category/launcher/%%GET_FANART%% - get launcher fanart from configured scraper
+                /category/launcher/rom/%%GET_INFO%% - get rom info from configured scraper
+                /category/launcher/rom/%%GET_THUMB%% - get rom thumb from configured scraper
+                /category/launcher/rom/%%GET_FANART%% - get rom fanart from configured scraper
 
                 (blank)     - open a list of the available launchers. if no launcher exists - open the launcher creation wizard.
     '''
@@ -1501,12 +1501,19 @@ class Main:
         try:
             usock = open( TEMP_CURRENT_SOURCE_PATH, 'w' )
             usock.write("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n")
+            # Create Categories XML list
+            usock.write("<categories>\n")
+            usock.write("\t<category>\n")
+            usock.write("\t\t<id>default</id>\n")
+            usock.write("\t\t<name>Default</name>\n")
+            usock.write("\t</category>\n")
+            usock.write("</categories>\n")
+            # Create Launchers XML list
             usock.write("<launchers>\n")
             for launcherIndex in sorted(self.launchers, key= lambda x : self.launchers[x]["name"]):
                 launcher = self.launchers[launcherIndex]
                 usock.write("\t<launcher>\n")
                 usock.write("\t\t<id>"+launcherIndex+"</id>\n")
-                # replace low-9 quotation mark by comma
                 usock.write("\t\t<name>"+launcher["name"]+"</name>\n")
                 usock.write("\t\t<category>"+launcher["category"]+"</category>\n")
                 usock.write("\t\t<application>"+launcher["application"]+"</application>\n")
@@ -1527,12 +1534,12 @@ class Main:
                 usock.write("\t\t<finished>"+launcher["finished"]+"</finished>\n")
                 usock.write("\t\t<minimize>"+launcher["minimize"]+"</minimize>\n")
                 usock.write("\t\t<lnk>"+launcher["lnk"]+"</lnk>\n")
+                # Create Items XML list
                 usock.write("\t\t<roms>\n")
                 for romIndex in sorted(launcher["roms"], key= lambda x : launcher["roms"][x]["name"]):
                     romdata = launcher["roms"][romIndex]
                     usock.write("\t\t\t<rom>\n")
                     usock.write("\t\t\t\t<id>"+romIndex+"</id>\n")
-                    # replace low-9 quotation mark by comma
                     usock.write("\t\t\t\t<name>"+romdata["name"]+"</name>\n")
                     usock.write("\t\t\t\t<filename>"+romdata["filename"]+"</filename>\n")
                     usock.write("\t\t\t\t<thumb>"+romdata["thumb"]+"</thumb>\n")
