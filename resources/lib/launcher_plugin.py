@@ -1543,6 +1543,8 @@ class Main:
                     usock.write("\t\t\t\t<publisher>"+romdata["studio"]+"</publisher>\n")
                     usock.write("\t\t\t\t<gameplot>"+romdata["plot"]+"</gameplot>\n")
                     usock.write("\t\t\t\t<finished>"+romdata["finished"]+"</finished>\n")
+                    usock.write("\t\t\t\t<altapp>"+romdata["altapp"]+"</altapp>\n")
+                    usock.write("\t\t\t\t<altarg>"+romdata["altarg"]+"</altarg>\n")
                     usock.write("\t\t\t</rom>\n")
                 usock.write("\t\t</roms>\n")
                 usock.write("\t</launcher>\n")
@@ -1651,6 +1653,8 @@ class Main:
                 romstudio = re.findall( "<publisher>(.*?)</publisher>", rom )
                 romplot = re.findall( "<gameplot>(.*?)</gameplot>", rom )
                 romfinished = re.findall( "<finished>(.*?)</finished>", rom )
+                romaltapp = re.findall( "<altapp>(.*?)</altapp>", rom )
+                romaltarg = re.findall( "<altarg>(.*?)</altarg>", rom )
                 romgamesys = gamesys
 
                 if len(romid) > 0 : romid = romid[0]
@@ -1679,6 +1683,10 @@ class Main:
                 else: romplot = ""
                 if len(romfinished) > 0 : romfinished = romfinished[0]
                 else: romfinished = "false"
+                if len(romaltapp) > 0 : romalapp = romaltapp[0]
+                else: romaltapp = ""
+                if len(romaltarg) > 0 : romaltarg = romaltarg[0]
+                else: romaltarg = ""
 
                 # prepare rom object data
                 romdata = {}
@@ -1694,6 +1702,8 @@ class Main:
                 romdata["studio"] = romstudio
                 romdata["plot"] = romplot
                 romdata["finished"] = romfinished
+                romdata["altapp"] = romaltapp
+                romdata["altarg"] = romaltarg
 
                 # add rom to the roms list (using id as index)
                 roms[romid] = romdata
@@ -1747,7 +1757,7 @@ class Main:
                         defined_fanart = selectedLauncher["fanart"]
                     else:
                         defined_fanart = roms[key]["fanart"]
-                    self._add_rom(launcherID, roms[key]["name"], roms[key]["filename"], roms[key]["gamesys"], roms[key]["thumb"], defined_fanart, roms[key]["trailer"], roms[key]["custom"], roms[key]["genre"], roms[key]["release"], roms[key]["studio"], roms[key]["plot"], roms[key]["finished"], len(roms), key)
+                    self._add_rom(launcherID, roms[key]["name"], roms[key]["filename"], roms[key]["gamesys"], roms[key]["thumb"], defined_fanart, roms[key]["trailer"], roms[key]["custom"], roms[key]["genre"], roms[key]["release"], roms[key]["studio"], roms[key]["plot"], roms[key]["finished"], roms[key]["altapp"], roms[key]["altarg"], len(roms), key)
                 xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )
                 return True
             else:
@@ -1883,6 +1893,8 @@ class Main:
                         romdata["studio"] = ""
                         romdata["plot"] = ""
                         romdata["finished"] = "false"
+                        romdata["altapp"] = ""
+                        romdata["altarg"] = ""
 
                         self._print_log(import_text) 
                         self._print_log(__language__( 30732 ) % romname) 
@@ -2125,7 +2137,7 @@ class Main:
                         romsCount = romsCount + 1
 
                         if (addRoms):
-                            self._add_rom(launcherID, romdata["name"], romdata["filename"], romdata["gamesys"], romdata["thumb"], romdata["fanart"], romdata["trailer"], romdata["custom"], romdata["genre"], romdata["release"], romdata["studio"], romdata["plot"], romdata["finished"], len(files), key)
+                            self._add_rom(launcherID, romdata["name"], romdata["filename"], romdata["gamesys"], romdata["thumb"], romdata["fanart"], romdata["trailer"], romdata["custom"], romdata["genre"], romdata["release"], romdata["studio"], romdata["plot"], romdata["finished"], romdata["altapp"], romdata["altarg"], len(files), key)
                             romadded = True
             if not romadded:
                 self._print_log(__language__( 30731 )) 
@@ -2183,7 +2195,7 @@ class Main:
             else:
                 xbmcplugin.addDirectoryItem( handle=int( self._handle ), url="%s?%s"  % (self._path, key), listitem=listitem, isFolder=False)
 
-    def _add_rom( self, launcherID, name, cmd , romgamesys, thumb, romfanart, romtrailer, romcustom, romgenre, romrelease, romstudio, romplot, finished, total, key):
+    def _add_rom( self, launcherID, name, cmd , romgamesys, thumb, romfanart, romtrailer, romcustom, romgenre, romrelease, romstudio, romplot, finished, altapp, altarg, total, key):
         if (int(xbmc.getInfoLabel("System.BuildVersion")[0:2]) < 12 ):
             # Dharma / Eden compatible
             display_date_format = "Date"
@@ -2291,6 +2303,8 @@ class Main:
                 romdata["studio"] = ""
                 romdata["plot"] = ""
                 romdata["finished"] = "false"
+                romdata["altapp"] = ""
+                romdata["altarg"] = ""
 
                 # add rom to the roms list (using name as index)
                 romid = _get_SID()
@@ -2696,5 +2710,5 @@ def _find_category_roms( self, search, category ):
                             rl[keyr]["launcherID"] = launcherID
     #print the list sorted
     for key in sorted(rl.iterkeys()):
-        self._add_rom(rl[key]["launcherID"], rl[key]["name"], rl[key]["filename"], rl[key]["gamesys"], rl[key]["thumb"], rl[key]["fanart"], rl[key]["trailer"], rl[key]["custom"], rl[key]["genre"], rl[key]["release"], rl[key]["studio"], rl[key]["plot"], rl[key]["finished"], len(rl), key)
+        self._add_rom(rl[key]["launcherID"], rl[key]["name"], rl[key]["filename"], rl[key]["gamesys"], rl[key]["thumb"], rl[key]["fanart"], rl[key]["trailer"], rl[key]["custom"], rl[key]["genre"], rl[key]["release"], rl[key]["studio"], rl[key]["plot"], rl[key]["finished"], rl[key]["altapp"], rl[key]["altarg"], len(rl), key)
     xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )
