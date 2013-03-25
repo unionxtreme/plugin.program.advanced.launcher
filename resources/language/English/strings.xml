@@ -69,6 +69,10 @@
     <string id="30106">Add Items</string>
     <string id="30107">Edit Item</string>
     <string id="30109">Edit Launcher</string>
+    <string id="30110">Edit Category</string>
+    <string id="30111">Create New Category</string>
+    <string id="30112">New Category Name</string>
+    <string id="30113">Category %s created</string>
     
     <string id="30120">Import Mode</string>
     <string id="30121">Source</string>
@@ -183,6 +187,7 @@
     <string id="30339">Status : Unfinished</string>
     <string id="30340">Status : Finished</string>
     <string id="30341">Change Trailer file : %s</string>
+    <string id="30342">Change Category : %s</string>
     
     <string id="30400">Search items...</string>
     <string id="30401">By Title</string>
@@ -252,4 +257,7 @@
     <string id="30736">Info automatic scraping</string>
     <string id="30737">Info semi-automatic scraping</string>
     <string id="30738">Scraping disable</string>
+    <string id="30739">Advanced Launcher root folder > Categories list</string>
+    <string id="30740">%s category folder > Launcher list</string>
+    <string id="30741">URL received : %s</string>
 </strings>
