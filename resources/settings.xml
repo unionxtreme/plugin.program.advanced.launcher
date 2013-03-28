@@ -43,7 +43,6 @@
         <setting id="separator" type="lsep" label="30124"/>
         <setting label="30158" type="bool" id="recursive_scan" default="true" />
         <setting label="30176" type="bool" id="hide_finished" default="false" />
-        <setting label="30180" type="slider" id="start_tempo" default="1000" range="0,100,15000" option="int"/>
         <setting label="30152" type="enum" id="media_state" lvalues="30153|30154|30155" default="0" />
         <setting label="30175" type="bool" id="lirc_state" default="true" />
         <setting label="30160" type="bool" id="launcher_notification" default="false" />
@@ -61,6 +60,7 @@
         <setting id="separator" type="lsep" label="30156"/>
         <setting label="30187" type="bool" id="show_log" default="true"/>
         <setting label="30157" type="bool" id="show_batch" default="false"/>
+        <setting label="30180" type="slider" id="start_tempo" default="1000" range="0,100,15000" option="int"/>
     </category>
 
 </settings>
