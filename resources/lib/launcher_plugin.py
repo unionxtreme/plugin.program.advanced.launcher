@@ -1384,6 +1384,7 @@ class Main:
         self.settings[ "auto_backup" ] = ( __settings__.getSetting( "auto_backup" ) == "true" )
         self.settings[ "nb_backup_files" ] = int(round(float(__settings__.getSetting( "nb_backup_files" ))))
         self.settings[ "show_log" ] = ( __settings__.getSetting( "show_log" ) == "true" )
+        self.settings[ "hide_default_cat" ] = ( __settings__.getSetting( "hide_default_cat" ) == "true" )
 
     def _print_log(self,string):
         if (self.settings[ "show_log" ]):
@@ -1846,7 +1847,9 @@ class Main:
 
     def _get_categories( self ):
         for key in sorted(self.categories, key= lambda x : self.categories[x]["name"]):
-            self._add_category(self.categories[key]["name"], len(self.categories), key)
+            print self.categories[key]['id']
+            if ( not self.settings[ "hide_default_cat" ] or self.categories[key]['id'] != "default" ):
+                self._add_category(self.categories[key]["name"], len(self.categories), key)
         xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )
 
     def _get_launchers( self, categoryID ):
