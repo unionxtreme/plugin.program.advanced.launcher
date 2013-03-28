@@ -138,6 +138,7 @@
     <string id="30185">Load a backup launchers.xml file</string>
     <string id="30186">Select the launchers.xml file to load</string>
     <string id="30187">Show logs into xbmc.log file</string>
+    <string id="30188">Display</string>
 
     <string id="30201">default</string>
     <string id="30202">experienced users</string>
