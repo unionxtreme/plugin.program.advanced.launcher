@@ -148,6 +148,7 @@ class Main:
         if param:
             param = param[1:]
             command = param.split(COMMAND_ARGS_SEPARATOR)
+            print command
             command_part = command[0].replace("%2f","/").split("/")
             # check the action needed
             if ( len(command_part) == 4 ):
@@ -156,6 +157,8 @@ class Main:
                 rom = command_part[2]
                 action = command_part[3]
 
+                if (action == SEARCH_COMMAND):
+                    self._find_roms()
                 if (action == REMOVE_COMMAND):
                     self._remove_rom(launcher, rom)
                 elif (action == EDIT_COMMAND):
@@ -166,24 +169,14 @@ class Main:
                     self._scrap_thumb_rom(launcher, rom)
                 elif (action == GET_FANART):
                     self._scrap_fanart_rom(launcher, rom)
-                elif (action == ADD_COMMAND):
-                    self._add_roms(launcher)
-                elif (action == SEARCH_COMMAND):
-                    self._find_add_roms(launcher)
-                elif (action == SEARCH_DATE_COMMAND):
-                    self._find_date_add_roms(launcher)
-                elif (action == SEARCH_PLATFORM_COMMAND):
-                    self._find_platform_add_roms(launcher)
-                elif (action == SEARCH_STUDIO_COMMAND):
-                    self._find_studio_add_roms(launcher)
-                elif (action == SEARCH_GENRE_COMMAND):
-                    self._find_genre_add_roms(launcher)
 
             if ( len(command_part) == 3 ):
                 category = command_part[0]
                 launcher = command_part[1]
                 rom = command_part[2]
 
+                if (rom == SEARCH_COMMAND):
+                    self._find_roms()
                 if (rom == REMOVE_COMMAND):
                     self._remove_launcher(launcher)
                 elif (rom == EDIT_COMMAND):
@@ -194,6 +187,8 @@ class Main:
                     self._scrap_thumb_launcher(launcher)
                 elif (rom == GET_FANART):
                     self._scrap_fanart_launcher(launcher)
+                elif (rom == ADD_COMMAND):
+                    self._add_roms(launcher)
                 else:
                     self._run_rom(launcher, rom)
 
@@ -201,14 +196,22 @@ class Main:
                 category = command_part[0]
                 launcher = command_part[1]
 
-                if (launcher == SEARCH_COMMAND):
-                    self._find_roms()
-                elif (launcher == FILE_MANAGER_COMMAND):
+                if (launcher == FILE_MANAGER_COMMAND):
                     self._file_manager()
                 elif (launcher == EDIT_COMMAND):
                     self._edit_category(category)
                 elif (launcher == ADD_COMMAND):
                     self._add_new_launcher(category)
+                elif (launcher == SEARCH_COMMAND):
+                    self._find_add_roms(category)
+                elif (launcher == SEARCH_DATE_COMMAND):
+                    self._find_date_add_roms(category)
+                elif (launcher == SEARCH_PLATFORM_COMMAND):
+                    self._find_platform_add_roms(category)
+                elif (launcher == SEARCH_STUDIO_COMMAND):
+                    self._find_studio_add_roms(category)
+                elif (launcher == SEARCH_GENRE_COMMAND):
+                    self._find_genre_add_roms(category)
                 else:
                     if (self.launchers[launcher]["rompath"] == ""):
                         self._run_launcher(launcher)
@@ -2336,7 +2339,7 @@ class Main:
         listitem.setInfo( "video", { "Title": name, "Label": os.path.basename(cmd), "Plot" : romplot, "Studio" : romstudio, "Genre" : romgenre, "Premiered" : romrelease  , display_date_format : romrelease, "Writer" : romgamesys, "Trailer" : os.path.join(romtrailer), "Director" : os.path.join(romcustom), "overlay": ICON_OVERLAY } )
 
         commands = []
-        commands.append((__language__( 30512 ), "XBMC.RunPlugin(%s?%s/%s)"    % (self._path, self.launchers[launcherID]["category"], SEARCH_COMMAND) , ))
+        commands.append((__language__( 30512 ), "XBMC.RunPlugin(%s?%s/%s/%s)"    % (self._path, self.launchers[launcherID]["category"], launcherID, SEARCH_COMMAND) , ))
         commands.append(( __language__( 30107 ), "XBMC.RunPlugin(%s?%s/%s/%s/%s)" % (self._path, self.launchers[launcherID]["category"], launcherID, key, EDIT_COMMAND) , ))
         listitem.addContextMenuItems( commands )
         if ( finished == "false" ) or ( self.settings[ "hide_finished" ] == False) :
@@ -2677,6 +2680,8 @@ class Main:
         _find_category_roms( self, search, "studio" )
 
     def _find_genre_add_roms( self, search ):
+        print self
+        print search
         _find_category_roms( self, search, "genre" )
 
 class MainGui( xbmcgui.WindowXMLDialog ):
