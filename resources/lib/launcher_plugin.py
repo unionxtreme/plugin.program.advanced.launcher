@@ -77,6 +77,7 @@ GET_INFO = "%%GET_INFO%%"
 GET_THUMB = "%%GET_THUMB%%"
 GET_FANART = "%%GET_FANART%%"
 SEARCH_COMMAND = "%%SEARCH%%"
+SEARCH_ITEM_COMMAND = "%%SEARCH_ITEM%%"
 SEARCH_DATE_COMMAND = "%%SEARCH_DATE%%"
 SEARCH_PLATFORM_COMMAND = "%%SEARCH_PLATFORM%%"
 SEARCH_STUDIO_COMMAND = "%%SEARCH_STUDIO%%"
@@ -204,16 +205,20 @@ class Main:
                     self._edit_category(category)
                 elif (launcher == ADD_COMMAND):
                     self._add_new_launcher(category)
-                #elif (launcher == SEARCH_COMMAND):
-                #    self._find_add_roms(category)
-                #elif (launcher == SEARCH_DATE_COMMAND):
-                #    self._find_date_add_roms(category)
-                #elif (launcher == SEARCH_PLATFORM_COMMAND):
-                #    self._find_platform_add_roms(category)
-                #elif (launcher == SEARCH_STUDIO_COMMAND):
-                #    self._find_studio_add_roms(category)
-                #elif (launcher == SEARCH_GENRE_COMMAND):
-                #    self._find_genre_add_roms(category)
+                    
+                # Search commands
+
+                elif (launcher == SEARCH_ITEM_COMMAND):
+                    self._find_add_roms(category)
+                elif (launcher == SEARCH_DATE_COMMAND):
+                    self._find_date_add_roms(category)
+                elif (launcher == SEARCH_PLATFORM_COMMAND):
+                    self._find_platform_add_roms(category)
+                elif (launcher == SEARCH_STUDIO_COMMAND):
+                    self._find_studio_add_roms(category)
+                elif (launcher == SEARCH_GENRE_COMMAND):
+                    self._find_genre_add_roms(category)
+
                 else:
                     if (self.launchers[launcher]["rompath"] == ""):
                         self._run_launcher(launcher)
@@ -2625,7 +2630,7 @@ class Main:
             keyboard.doModal()
             if (keyboard.isConfirmed()):
                 search = keyboard.getText()
-                xbmc.executebuiltin("ReplaceWindow(Programs,%s?%s/%s)" % (self._path, search, SEARCH_COMMAND))
+                xbmc.executebuiltin("ReplaceWindow(Programs,%s?%s/%s)" % (self._path, search, SEARCH_ITEM_COMMAND))
 
         #Search by Release Date
         type_nb = type_nb+1
