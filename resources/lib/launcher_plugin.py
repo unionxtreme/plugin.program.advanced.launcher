@@ -196,22 +196,24 @@ class Main:
                 category = command_part[0]
                 launcher = command_part[1]
 
-                if (launcher == FILE_MANAGER_COMMAND):
+                if (launcher == SEARCH_COMMAND):
+                    self._find_roms()
+                elif (launcher == FILE_MANAGER_COMMAND):
                     self._file_manager()
                 elif (launcher == EDIT_COMMAND):
                     self._edit_category(category)
                 elif (launcher == ADD_COMMAND):
                     self._add_new_launcher(category)
-                elif (launcher == SEARCH_COMMAND):
-                    self._find_add_roms(category)
-                elif (launcher == SEARCH_DATE_COMMAND):
-                    self._find_date_add_roms(category)
-                elif (launcher == SEARCH_PLATFORM_COMMAND):
-                    self._find_platform_add_roms(category)
-                elif (launcher == SEARCH_STUDIO_COMMAND):
-                    self._find_studio_add_roms(category)
-                elif (launcher == SEARCH_GENRE_COMMAND):
-                    self._find_genre_add_roms(category)
+                #elif (launcher == SEARCH_COMMAND):
+                #    self._find_add_roms(category)
+                #elif (launcher == SEARCH_DATE_COMMAND):
+                #    self._find_date_add_roms(category)
+                #elif (launcher == SEARCH_PLATFORM_COMMAND):
+                #    self._find_platform_add_roms(category)
+                #elif (launcher == SEARCH_STUDIO_COMMAND):
+                #    self._find_studio_add_roms(category)
+                #elif (launcher == SEARCH_GENRE_COMMAND):
+                #    self._find_genre_add_roms(category)
                 else:
                     if (self.launchers[launcher]["rompath"] == ""):
                         self._run_launcher(launcher)
