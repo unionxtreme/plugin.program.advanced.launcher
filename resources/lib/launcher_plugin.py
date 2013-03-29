@@ -2285,6 +2285,7 @@ class Main:
             commands.append(( __language__( 30110 ), "XBMC.RunPlugin(%s?%s/%s)" % (self._path, key, EDIT_COMMAND) , ))
         folder = True
         icon = "DefaultFolder.png"
+        commands.append(( __language__( 30194 ), "XBMC.RunPlugin(%s?%s/%s)" % (self._path, key, ADD_COMMAND) , ))
         listitem = xbmcgui.ListItem( name, iconImage=icon )
         listitem.setInfo( "video", { "Title": name } )
         listitem.addContextMenuItems( commands )
