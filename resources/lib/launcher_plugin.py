@@ -228,17 +228,15 @@ class Main:
                     self._file_manager()
                 elif (category == ADD_COMMAND):
                     self._add_new_category()
-                
-                if (category == "backup"):
+                elif (category == "backup"):
                     self._print_log(__language__( 30185 ))
                     backup_file = xbmcgui.Dialog().browse(1,__language__( 30186 ),"files",".xml", False, False, os.path.join(DEFAULT_BACKUP_PATH+"/"))
                     if (os.path.isfile(backup_file)):
                         self._load_launchers(self.get_xml_source(backup_file))
+                elif ( self._empty_cat(category) ):
+                    self._add_new_launcher(category)
                 else:
-                    if ( not self._empty_cat(category) ):
-                        self._get_launchers(category)
-                    else:
-                        self._add_new_launcher(category)
+                    self._get_launchers(category)
 
         else:
             self._print_log(__language__( 30739 ))
