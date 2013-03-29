@@ -78,7 +78,7 @@
     <string id="30121">Source</string>
     <string id="30122">Thumbs</string>
     <string id="30123">Fanarts</string>
-    <string id="30124">Advanced Options</string>
+    <string id="30124">Misc. Options</string>
     <string id="30125">For Thumbs images</string>
     <string id="30126">Data &amp; Infos</string>
     <string id="30127">For Fanarts images</string>
@@ -133,13 +133,17 @@
     <string id="30180">Adjust launcher delay (ms)</string>
     <string id="30181">Backup</string>
     <string id="30182">Activate autobackup</string>
-    <string id="30183">Backup/Debug</string>
+    <string id="30183">Advanced</string>
     <string id="30184">Number of backup files to keep</string>
-    <string id="30185">Load a backup launchers.xml file</string>
-    <string id="30186">Select the launchers.xml file to load</string>
+    <string id="30185">Restore a backup (Import XML file)</string>
+    <string id="30186">Select the XML file to import</string>
     <string id="30187">Show logs into xbmc.log file</string>
     <string id="30188">Display</string>
     <string id="30189">Hide the Default Category</string>
+    <string id="30190">Merge items list (Append XML files)</string>
+    <string id="30191">Select the XML file to append</string>
+    <string id="30192">Merger</string>
+    <string id="30193">Start</string>
 
     <string id="30201">default</string>
     <string id="30202">experienced users</string>

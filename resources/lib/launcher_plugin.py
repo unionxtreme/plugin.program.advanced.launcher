@@ -69,6 +69,8 @@ DEFAULT_BACKUP_PATH = os.path.join( PLUGIN_DATA_PATH , "backups" )
 if not os.path.exists(DEFAULT_BACKUP_PATH): os.makedirs(DEFAULT_BACKUP_PATH)
 
 REMOVE_COMMAND = "%%REMOVE%%"
+BACKUP_COMMAND = "%%BACKUP%%"
+APPEND_COMMAND = "%%APPEND%%"
 FILE_MANAGER_COMMAND = "%%FILEMANAGER%%"
 ADD_COMMAND = "%%ADD%%"
 EDIT_COMMAND = "%%EDIT%%"
@@ -235,11 +237,16 @@ class Main:
                     self._file_manager()
                 elif (category == ADD_COMMAND):
                     self._add_new_category()
-                elif (category == "backup"):
+                elif (category == BACKUP_COMMAND):
                     self._print_log(__language__( 30185 ))
                     backup_file = xbmcgui.Dialog().browse(1,__language__( 30186 ),"files",".xml", False, False, os.path.join(DEFAULT_BACKUP_PATH+"/"))
                     if (os.path.isfile(backup_file)):
                         self._load_launchers(self.get_xml_source(backup_file))
+                elif (category == APPEND_COMMAND):
+                    self._print_log(__language__( 30185 ))
+                    append_file = xbmcgui.Dialog().browse(1,__language__( 30191 ),"files",".xml", False, False, os.path.join(PLUGIN_DATA_PATH+"/"))
+                    if (os.path.isfile(append_file)):
+                        self._append_launchers(self.get_xml_source(append_file))
                 elif ( self._empty_cat(category) ):
                     self._add_new_launcher(category)
                 else:
