@@ -205,6 +205,13 @@ class Main:
                     self._file_manager()
                 elif (launcher == EDIT_COMMAND):
                     self._edit_category(category)
+                elif (launcher == GET_INFO):
+                    self._modify_category(category)
+                    xbmc.executebuiltin("Container.Refresh")
+                elif (launcher == GET_THUMB):
+                    self._scrap_thumb_category(category)
+                elif (launcher == GET_FANART):
+                    self._scrap_fanart_category(category)
                 elif (launcher == ADD_COMMAND):
                     self._add_new_launcher(category)
                     
@@ -917,39 +924,41 @@ class Main:
         xbmc.executebuiltin("Container.Refresh")
 
 
+    def _modify_category(self, categoryID):
+        dialog = xbmcgui.Dialog()
+        type2 = dialog.select(__language__( 30344 ),[__language__( 30306 ) % self.categories[categoryID]["name"],__language__( 30310 ) % self.categories[categoryID]["genre"],__language__( 30328 ) % self.categories[categoryID]["plot"]])
+        if (type2 == 0 ):
+            # Edition of the category name
+            keyboard = xbmc.Keyboard(self.categories[categoryID]["name"], __language__( 30037 ))
+            keyboard.doModal()
+            if (keyboard.isConfirmed()):
+                title = keyboard.getText()
+                if ( title == "" ):
+                    title = self.categories[categoryID]["name"]
+                self.categories[categoryID]["name"] = title.rstrip()
+                self._save_launchers()
+        if (type2 == 1 ):
+            # Edition of the category genre
+            keyboard = xbmc.Keyboard(self.categories[categoryID]["genre"], __language__( 30040 ))
+            keyboard.doModal()
+            if (keyboard.isConfirmed()):
+                self.categories[categoryID]["genre"] = keyboard.getText()
+                self._save_launchers()
+        if (type2 == 2 ):
+            # Import category description
+            text_file = xbmcgui.Dialog().browse(1,__language__( 30080 ),"files",".txt|.dat", False, False)
+            if ( os.path.isfile(text_file) == True ):
+                text_plot = open(text_file, 'r')
+                self.categories[categoryID]["plot"] = text_plot.read()
+                text_plot.close()
+                self._save_launchers()
+
     def _edit_category(self, categoryID):
         dialog = xbmcgui.Dialog()
         type = dialog.select(__language__( 30300 ) % self.categories[categoryID]["name"], [__language__( 30301 ),__language__( 30302 ),__language__( 30303 ),__language__( 30304 )])
         if (type == 0 ):
-            dialog = xbmcgui.Dialog()
-            type2 = dialog.select(__language__( 30344 ),[__language__( 30306 ) % self.categories[categoryID]["name"],__language__( 30310 ) % self.categories[categoryID]["genre"],__language__( 30328 ) % self.categories[categoryID]["plot"]])
-            if (type2 == 0 ):
-                # Edition of the category name
-                keyboard = xbmc.Keyboard(self.categories[categoryID]["name"], __language__( 30037 ))
-                keyboard.doModal()
-                if (keyboard.isConfirmed()):
-                    title = keyboard.getText()
-                    if ( title == "" ):
-                        title = self.categories[categoryID]["name"]
-                    self.categories[categoryID]["name"] = title.rstrip()
-                    self._save_launchers()
-            if (type2 == 1 ):
-                # Edition of the category genre
-                keyboard = xbmc.Keyboard(self.categories[categoryID]["genre"], __language__( 30040 ))
-                keyboard.doModal()
-                if (keyboard.isConfirmed()):
-                    self.categories[categoryID]["genre"] = keyboard.getText()
-                    self._save_launchers()
-            if (type2 == 2 ):
-                # Import category description
-                text_file = xbmcgui.Dialog().browse(1,__language__( 30080 ),"files",".txt|.dat", False, False)
-                if ( os.path.isfile(text_file) == True ):
-                    text_plot = open(text_file, 'r')
-                    self.categories[categoryID]["plot"] = text_plot.read()
-                    text_plot.close()
-                    self._save_launchers()
-
-        # Cattegory Thumb menu option
+            self._modify_category(categoryID)
+        # Category Thumb menu option
         if (type == 1 ):
             dialog = xbmcgui.Dialog()
             thumb_diag = __language__( 30312 ) % ( self.settings[ "thumbs_scraper" ] )
