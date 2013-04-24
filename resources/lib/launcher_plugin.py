@@ -306,11 +306,18 @@ class Main:
 
     def _remove_category(self, categoryID):
         dialog = xbmcgui.Dialog()
-        ret = dialog.yesno(__language__( 30000 ), __language__( 30010 ) % self.categories[categoryID]["name"])
-        if (ret):
-            self.categories.pop(categoryID)
-            self._save_launchers()
-            xbmc.executebuiltin("Container.Update")
+        launcher_list = []
+        for launcherID in sorted(self.launchers.iterkeys()):
+            if (self.launchers[launcherID]['category'] == categoryID):
+                launcher_list.append(launcherID)
+        if ( len(launcher_list) > 0 ):
+            ret = dialog.ok(__language__( 30000 ), __language__( 30345 ) % self.categories[categoryID]["name"], __language__( 30346 ))
+        else:
+            ret = dialog.yesno(__language__( 30000 ), __language__( 30010 ) % self.categories[categoryID]["name"])
+            if (ret):
+                self.categories.pop(categoryID)
+                self._save_launchers()
+        xbmc.executebuiltin("Container.Update")
 
     def _edit_rom(self, launcher, rom):
         dialog = xbmcgui.Dialog()
@@ -912,7 +919,7 @@ class Main:
 
     def _edit_category(self, categoryID):
         dialog = xbmcgui.Dialog()
-        type = dialog.select(__language__( 30300 ) % self.categories[categoryID]["name"], [__language__( 30301 ),__language__( 30302 ),__language__( 30303 ),__language__( 30343 ),__language__( 30304 )])
+        type = dialog.select(__language__( 30300 ) % self.categories[categoryID]["name"], [__language__( 30301 ),__language__( 30302 ),__language__( 30303 ),__language__( 30304 )])
         if (type == 0 ):
             dialog = xbmcgui.Dialog()
             type2 = dialog.select(__language__( 30344 ),[__language__( 30306 ) % self.categories[categoryID]["name"],__language__( 30310 ) % self.categories[categoryID]["genre"],__language__( 30328 ) % self.categories[categoryID]["plot"]])
@@ -942,7 +949,7 @@ class Main:
                     text_plot.close()
                     self._save_launchers()
 
-        # Cattegory Fhumb menu option
+        # Cattegory Thumb menu option
         if (type == 1 ):
             dialog = xbmcgui.Dialog()
             thumb_diag = __language__( 30312 ) % ( self.settings[ "thumbs_scraper" ] )
@@ -1024,7 +1031,7 @@ class Main:
                         _update_cache(image)
                         xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30075 )))
 
-        if (type == 4 ):
+        if (type == 3 ):
             self._remove_category(categoryID)
         if (type == -1 ):
             self._save_launchers()
