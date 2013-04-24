@@ -195,6 +195,8 @@
     <string id="30340">Status : Finished</string>
     <string id="30341">Change Trailer file : %s</string>
     <string id="30342">Change Category : %s</string>
+    <string id="30343">Manage Launchers List</string>
+    <string id="30344">Modify Category Infos</string>
     
     <string id="30400">Search items...</string>
     <string id="30401">By Title</string>

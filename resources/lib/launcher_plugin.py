@@ -834,20 +834,37 @@ class Main:
 
     def _edit_category(self, categoryID):
         dialog = xbmcgui.Dialog()
-        type = dialog.select(__language__( 30300 ) % self.categories[categoryID]["name"], [__language__( 30306 ) % self.categories[categoryID]["name"],__language__( 30304 )])
+        type = dialog.select(__language__( 30300 ) % self.categories[categoryID]["name"], [__language__( 30301 ),__language__( 30302 ),__language__( 30303 ),__language__( 30343 ),__language__( 30304 )])
         if (type == 0 ):
-            # Edition of the category name
-            keyboard = xbmc.Keyboard(self.categories[categoryID]["name"], __language__( 30037 ))
-            keyboard.doModal()
-            if (keyboard.isConfirmed()):
-                title = keyboard.getText()
-                if ( title == "" ):
-                    title = self.categories[categoryID]["name"]
-                self.categories[categoryID]["name"] = title.rstrip()
-                self._save_launchers()
-        if (type == 1 ):
+            dialog = xbmcgui.Dialog()
+            type2 = dialog.select(__language__( 30344 ),[__language__( 30306 ) % self.categories[categoryID]["name"],__language__( 30310 ) % self.categories[categoryID]["genre"],__language__( 30328 ) % self.categories[categoryID]["plot"]])
+            if (type2 == 0 ):
+                # Edition of the category name
+                keyboard = xbmc.Keyboard(self.categories[categoryID]["name"], __language__( 30037 ))
+                keyboard.doModal()
+                if (keyboard.isConfirmed()):
+                    title = keyboard.getText()
+                    if ( title == "" ):
+                        title = self.categories[categoryID]["name"]
+                    self.categories[categoryID]["name"] = title.rstrip()
+                    self._save_launchers()
+            if (type2 == 1 ):
+                # Edition of the category genre
+                keyboard = xbmc.Keyboard(self.categories[categoryID]["genre"], __language__( 30040 ))
+                keyboard.doModal()
+                if (keyboard.isConfirmed()):
+                    self.categories[categoryID]["genre"] = keyboard.getText()
+                    self._save_launchers()
+            if (type2 == 2 ):
+                # Import category description
+                text_file = xbmcgui.Dialog().browse(1,__language__( 30080 ),"files",".txt|.dat", False, False)
+                if ( os.path.isfile(text_file) == True ):
+                    text_plot = open(text_file, 'r')
+                    self.categories[categoryID]["plot"] = text_plot.read()
+                    text_plot.close()
+                    self._save_launchers()
+        if (type == 4 ):
             self._remove_category(categoryID)
-
         if (type == -1 ):
             self._save_launchers()
 
@@ -1601,6 +1618,10 @@ class Main:
                 usock.write("\t<category>\n")
                 usock.write("\t\t<id>"+categoryIndex+"</id>\n")
                 usock.write("\t\t<name>"+category["name"]+"</name>\n")
+                usock.write("\t\t<thumb>"+category["thumb"]+"</thumb>\n")
+                usock.write("\t\t<fanart>"+category["fanart"]+"</fanart>\n")
+                usock.write("\t\t<genre>"+category["genre"]+"</genre>\n")
+                usock.write("\t\t<description>"+category["plot"]+"</description>\n")
                 usock.write("\t</category>\n")
             usock.write("</categories>\n")
             # Create Launchers XML list
@@ -1675,15 +1696,31 @@ class Main:
         for category in categories:
             categoryid = re.findall( "<id>(.*?)</id>", category )
             categoryname = re.findall( "<name>(.*?)</name>", category )
+            categorythumb = re.findall( "<thumb>(.*?)</thumb>", category )
+            categoryfanart = re.findall( "<fanart>(.*?)</fanart>", category )
+            categorygenre = re.findall( "<genre>(.*?)</genre>", category )
+            categoryplot = re.findall( "<description>(.*?)</description>", category )
 
             if len(categoryid) > 0 : categoryid = categoryid[0]
             else: categoryid = "default"
             if len(categoryname) > 0 : categoryname = categoryname[0]
             else: categoryname = "Default"
+            if len(categorythumb) > 0: categorythumb = categorythumb[0]
+            else: categorythumb = ""
+            if len(categoryfanart) > 0: categoryfanart = categoryfanart[0]
+            else: categoryfanart = ""
+            if len(categorygenre) > 0: categorygenre = categorygenre[0]
+            else: categorygenre = ""
+            if len(categoryplot) > 0: categoryplot = categoryplot[0]
+            else: categoryplot = ""
 
             categorydata = {}
             categorydata["id"] = categoryid
             categorydata["name"] = categoryname
+            categorydata["thumb"] = categorythumb
+            categorydata["fanart"] = categoryfanart
+            categorydata["genre"] = categorygenre
+            categorydata["plot"] = categoryplot
             self.categories[categoryid] = categorydata
 
         launchers = re.findall( "<launcher>(.*?)</launcher>", xmlSource )
@@ -1864,7 +1901,7 @@ class Main:
         for key in sorted(self.categories, key= lambda x : self.categories[x]["name"]):
             print self.categories[key]['id']
             if ( not self.settings[ "hide_default_cat" ] or self.categories[key]['id'] != "default" ):
-                self._add_category(self.categories[key]["name"], len(self.categories), key)
+                self._add_category(self.categories[key]["name"], self.categories[key]["genre"], self.categories[key]["plot"], len(self.categories), key)
         xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )
 
     def _get_launchers( self, categoryID ):
@@ -2276,7 +2313,7 @@ class Main:
         else:
             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30016 ) % (romsCount, skipCount) + " " + __language__( 30050 )))
 
-    def _add_category(self, name, total, key) :
+    def _add_category(self, name, genre, plot, total, key) :
         commands = []
         commands.append((__language__( 30512 ), "XBMC.RunPlugin(%s?%s)" % (self._path, SEARCH_COMMAND) , ))
         commands.append((__language__( 30051 ), "XBMC.RunPlugin(%s?%s)" % (self._path, FILE_MANAGER_COMMAND) , ))
@@ -2287,7 +2324,7 @@ class Main:
         icon = "DefaultFolder.png"
         commands.append(( __language__( 30194 ), "XBMC.RunPlugin(%s?%s/%s)" % (self._path, key, ADD_COMMAND) , ))
         listitem = xbmcgui.ListItem( name, iconImage=icon )
-        listitem.setInfo( "video", { "Title": name } )
+        listitem.setInfo( "video", { "Title": name, "Genre" : genre, "Plot" : plot} )
         listitem.addContextMenuItems( commands )
         xbmcplugin.addDirectoryItem( handle=int( self._handle ), url="%s?%s"  % (self._path, key), listitem=listitem, isFolder=True)
 
