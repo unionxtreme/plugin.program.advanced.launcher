@@ -57,6 +57,8 @@ def __language__(string):
 BASE_PATH = xbmc.translatePath( os.path.join( "special://" , "profile" ) )
 BASE_CURRENT_SOURCE_PATH = os.path.join( PLUGIN_DATA_PATH , "launchers.xml" )
 TEMP_CURRENT_SOURCE_PATH = os.path.join( PLUGIN_DATA_PATH , "launchers.tmp" )
+MERGED_SOURCE_PATH = os.path.join(PLUGIN_DATA_PATH , "merged-launchers.xml" )
+
 SHORTCUT_FILE = os.path.join( PLUGIN_DATA_PATH , "shortcut.cut" )
 
 DEFAULT_THUMB_PATH = os.path.join( PLUGIN_DATA_PATH , "thumbs" )
@@ -253,7 +255,7 @@ class Main:
                     self._print_log(__language__( 30185 ))
                     append_file = xbmcgui.Dialog().browse(1,__language__( 30191 ),"files",".xml", False, False, os.path.join(PLUGIN_DATA_PATH+"/"))
                     if (os.path.isfile(append_file)):
-                        self._append_launchers(self.get_xml_source(append_file))
+                        self._append_launchers(append_file)
                 elif ( self._empty_cat(category) ):
                     self._add_new_launcher(category)
                 else:
@@ -1867,6 +1869,14 @@ class Main:
         os.remove(TEMP_CURRENT_SOURCE_PATH)
         xbmc.executebuiltin( "Dialog.Close(busydialog)" )
 
+    def _append_launchers(self, xmlfile):
+        destination = open(MERGED_SOURCE_PATH,'wb')
+        shutil.copyfileobj(open(xmlfile,'rb'), destination)
+        shutil.copyfileobj(open(BASE_CURRENT_SOURCE_PATH,'rb'), destination)
+        destination.close()
+        shutil.copy2(MERGED_SOURCE_PATH, BASE_CURRENT_SOURCE_PATH)
+        os.remove(MERGED_SOURCE_PATH)
+        xbmc.executebuiltin("Container.Refresh")
 
     ''' read the list of categories, launchers and roms from launchers.xml file '''
     def _load_launchers(self, xmlSource):
@@ -1875,35 +1885,46 @@ class Main:
         xmlSource = xmlSource.replace("&amp;", "&")
 
         categories = re.findall( "<category>(.*?)</category>", xmlSource )
-        for category in categories:
-            categoryid = re.findall( "<id>(.*?)</id>", category )
-            categoryname = re.findall( "<name>(.*?)</name>", category )
-            categorythumb = re.findall( "<thumb>(.*?)</thumb>", category )
-            categoryfanart = re.findall( "<fanart>(.*?)</fanart>", category )
-            categorygenre = re.findall( "<genre>(.*?)</genre>", category )
-            categoryplot = re.findall( "<description>(.*?)</description>", category )
+        
+        if len(categories) > 0 :
+            for category in categories:
+                categoryid = re.findall( "<id>(.*?)</id>", category )
+                categoryname = re.findall( "<name>(.*?)</name>", category )
+                categorythumb = re.findall( "<thumb>(.*?)</thumb>", category )
+                categoryfanart = re.findall( "<fanart>(.*?)</fanart>", category )
+                categorygenre = re.findall( "<genre>(.*?)</genre>", category )
+                categoryplot = re.findall( "<description>(.*?)</description>", category )
 
-            if len(categoryid) > 0 : categoryid = categoryid[0]
-            else: categoryid = "default"
-            if len(categoryname) > 0 : categoryname = categoryname[0]
-            else: categoryname = "Default"
-            if len(categorythumb) > 0: categorythumb = categorythumb[0]
-            else: categorythumb = ""
-            if len(categoryfanart) > 0: categoryfanart = categoryfanart[0]
-            else: categoryfanart = ""
-            if len(categorygenre) > 0: categorygenre = categorygenre[0]
-            else: categorygenre = ""
-            if len(categoryplot) > 0: categoryplot = categoryplot[0]
-            else: categoryplot = ""
+                if len(categoryid) > 0 : categoryid = categoryid[0]
+                else: categoryid = "default"
+                if len(categoryname) > 0 : categoryname = categoryname[0]
+                else: categoryname = "Default"
+                if len(categorythumb) > 0: categorythumb = categorythumb[0]
+                else: categorythumb = ""
+                if len(categoryfanart) > 0: categoryfanart = categoryfanart[0]
+                else: categoryfanart = ""
+                if len(categorygenre) > 0: categorygenre = categorygenre[0]
+                else: categorygenre = ""
+                if len(categoryplot) > 0: categoryplot = categoryplot[0]
+                else: categoryplot = ""
 
+                categorydata = {}
+                categorydata["id"] = categoryid
+                categorydata["name"] = categoryname
+                categorydata["thumb"] = categorythumb
+                categorydata["fanart"] = categoryfanart
+                categorydata["genre"] = categorygenre
+                categorydata["plot"] = categoryplot
+                self.categories[categoryid] = categorydata
+        else:
             categorydata = {}
-            categorydata["id"] = categoryid
-            categorydata["name"] = categoryname
-            categorydata["thumb"] = categorythumb
-            categorydata["fanart"] = categoryfanart
-            categorydata["genre"] = categorygenre
-            categorydata["plot"] = categoryplot
-            self.categories[categoryid] = categorydata
+            categorydata["id"] = "default"
+            categorydata["name"] = "Default"
+            categorydata["thumb"] = ""
+            categorydata["fanart"] = ""
+            categorydata["genre"] = ""
+            categorydata["plot"] = ""
+            self.categories["default"] = categorydata
 
         launchers = re.findall( "<launcher>(.*?)</launcher>", xmlSource )
         for launcher in launchers:

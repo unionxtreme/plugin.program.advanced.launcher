@@ -59,6 +59,7 @@
         <setting label="30182" type="bool" id="auto_backup" default="true" />
         <setting label="30184" type="slider" id="nb_backup_files" default="10" range="5,5,100" option="int" visible="eq(-1,true)"/>
         <setting label="30185" type="action" option="close" action="RunPlugin(plugin://plugin.program.advanced.launcher/?%%BACKUP%%)"/>
+        <setting label="30190" type="action" option="close" action="RunPlugin(plugin://plugin.program.advanced.launcher/?%%APPEND%%)"/>
         <setting id="separator" type="lsep" label="30156"/>
         <setting label="30187" type="bool" id="show_log" default="true"/>
         <setting label="30157" type="bool" id="show_batch" default="false"/>

@@ -135,12 +135,12 @@
     <string id="30182">Activate autobackup</string>
     <string id="30183">Advanced</string>
     <string id="30184">Number of backup files to keep</string>
-    <string id="30185">Restore a backup (Import XML file)</string>
+    <string id="30185">Restore a backup (import XML file)</string>
     <string id="30186">Select the XML file to import</string>
     <string id="30187">Show logs into xbmc.log file</string>
     <string id="30188">Display</string>
     <string id="30189">Hide the Default Category</string>
-    <string id="30190">Merge items list (Append XML files)</string>
+    <string id="30190">Merge launchers lists (append XML files)</string>
     <string id="30191">Select the XML file to append</string>
     <string id="30192">Merger</string>
     <string id="30193">Start</string>
