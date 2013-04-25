@@ -3,7 +3,7 @@
 
     <string id="30000">Advanced Launcher</string>
 
-    <string id="30010">Are you sure you want to remove "%s" ?</string>
+    <string id="30010">Are you sure you want to delete "%s" ?</string>
     <string id="30014">Importing files from %s</string>
     <string id="30015">%s files imported</string>
     <string id="30016">%s files imported, %s skipped</string>
@@ -197,8 +197,8 @@
     <string id="30342">Change Category : %s</string>
     <string id="30343">Manage Launchers List</string>
     <string id="30344">Modify Category Infos</string>
-    <string id="30345">Impossible to delete the "%s" category.</string>
-    <string id="30346">Please, remove all its launchers before deleting it.</string>
+    <string id="30345">"%s" contains %s launchers.</string>
+    <string id="30346">Deleting "%s" will also delete related launchers.</string>
     
     <string id="30400">Search items...</string>
     <string id="30401">By Title</string>

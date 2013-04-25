@@ -318,7 +318,12 @@ class Main:
             if (self.launchers[launcherID]['category'] == categoryID):
                 launcher_list.append(launcherID)
         if ( len(launcher_list) > 0 ):
-            ret = dialog.ok(__language__( 30000 ), __language__( 30345 ) % self.categories[categoryID]["name"], __language__( 30346 ))
+            ret = dialog.yesno(__language__( 30000 ), __language__( 30345 ) % (self.categories[categoryID]["name"],len(launcher_list)), __language__( 30346 ) % self.categories[categoryID]["name"], __language__( 30010 ) % self.categories[categoryID]["name"])
+            if (ret):
+                for launcherID in launcher_list:
+                    self.launchers.pop(launcherID)
+                self.categories.pop(categoryID)
+                self._save_launchers()
         else:
             ret = dialog.yesno(__language__( 30000 ), __language__( 30010 ) % self.categories[categoryID]["name"])
             if (ret):
