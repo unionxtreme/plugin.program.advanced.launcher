@@ -1,4 +1,9 @@
-[B]1.99.0[/B]
+[B]2.0.0[/B]
+. Add category parameter to launchers.
+. Add option to show"hide the default category.
+. Add category title, genre, description modification option.
+. Add category's thumb and fanart support (scrap/copy/link options).
+. Add launchers.xml files merging option
 . Add alternative application option for each items.
 . Add alternative argument option for each items.
 
