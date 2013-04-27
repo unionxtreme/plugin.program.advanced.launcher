@@ -508,18 +508,37 @@ class Main:
 
         if (type == 5 ):
             dialog = xbmcgui.Dialog()
-            type2 = dialog.select(__language__( 30323 ), [__language__( 30337 ) % self.launchers[launcher]["roms"][rom]["filename"], __language__( 30341 ) % self.launchers[launcher]["roms"][rom]["trailer"], __language__( 30331 ) % self.launchers[launcher]["roms"][rom]["custom"]])
+            type2 = dialog.select(__language__( 30323 ), [__language__( 30337 ) % self.launchers[launcher]["roms"][rom]["filename"], __language__( 30347 ) % self.launchers[launcher]["roms"][rom]["altapp"], __language__( 30348 ) % self.launchers[launcher]["roms"][rom]["altarg"], __language__( 30341 ) % self.launchers[launcher]["roms"][rom]["trailer"], __language__( 30331 ) % self.launchers[launcher]["roms"][rom]["custom"]])
             if (type2 == 0 ):
                 # Selection of the item file
                 item_file = xbmcgui.Dialog().browse(1,__language__( 30017 ),"files","."+self.launchers[launcher]["romext"].replace("|","|."), False, False, self.launchers[launcher]["roms"][rom]["filename"])
                 self.launchers[launcher]["roms"][rom]["filename"] = item_file
                 self._save_launchers()
             if (type2 == 1 ):
+            # Launcher application path menu option
+                if (os.environ.get( "OS", "xbox" ) == "xbox"):
+                    filter = ".xbe|.cut"
+                else:
+                    if (sys.platform == "win32"):
+                        filter = ".bat|.exe|.cmd|.lnk"
+                    else:
+                        filter = ""
+                app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files",filter, False, False, self.launchers[launcher]["roms"][rom]["altapp"])
+                self.launchers[launcher]["roms"][rom]["altapp"] = app
+                self._save_launchers()
+            # Edition of the launcher arguments
+            if (type2 == 2 ):
+                keyboard = xbmc.Keyboard(self.launchers[launcher]["roms"][rom]["altarg"], __language__( 30052 ))
+                keyboard.doModal()
+                if (keyboard.isConfirmed()):
+                    self.launchers[launcher]["roms"][rom]["altarg"] = keyboard.getText()
+                    self._save_launchers()
+            if (type2 == 3 ):
                 # Selection of the rom trailer file
                 trailer = xbmcgui.Dialog().browse(1,__language__( 30090 ),"files",".mp4|.mpg|.avi|.wmv|.mkv|.flv", False, False, self.launchers[launcher]["roms"][rom]["trailer"])
                 self.launchers[launcher]["roms"][rom]["trailer"] = trailer
                 self._save_launchers()
-            if (type2 == 2 ):
+            if (type2 == 4 ):
                 # Selection of the rom customs path
                 custom = xbmcgui.Dialog().browse(0,__language__( 30057 ),"files","", False, False, self.launchers[launcher]["roms"][rom]["custom"])
                 self.launchers[launcher]["roms"][rom]["custom"] = custom
@@ -1304,7 +1323,7 @@ class Main:
             # Launcher application path menu option
             type2_nb = 0
             if (type2 == type2_nb ):
-                app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files",filter, False, False, self.launchers[launcherID]["application"])
+                app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files","", False, False, self.launchers[launcherID]["application"])
                 self.launchers[launcherID]["application"] = app
 
             # Edition of the launcher arguments
@@ -2701,6 +2720,10 @@ class Main:
         if (keyboard.isConfirmed()):
             categorydata = {}
             categorydata["name"] = keyboard.getText()
+            categorydata["thumb"] = ""
+            categorydata["fanart"] = ""
+            categorydata["genre"] = ""
+            categorydata["plot"] = ""
             categoryid = _get_SID()
             self.categories[categoryid] = categorydata
             self._save_launchers()

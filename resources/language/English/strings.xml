@@ -199,6 +199,8 @@
     <string id="30344">Modify Category Infos</string>
     <string id="30345">"%s" contains %s launchers.</string>
     <string id="30346">Deleting "%s" will also delete related launchers.</string>
+    <string id="30347">Alternative application : %s</string>
+    <string id="30348">Alternative arguments : %s</string>
     
     <string id="30400">Search items...</string>
     <string id="30401">By Title</string>
