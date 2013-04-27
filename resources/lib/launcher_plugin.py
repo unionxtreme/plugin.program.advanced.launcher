@@ -1648,7 +1648,11 @@ class Main:
             if (launcher["roms"].has_key(romName)):
                 rom = self.launchers[launcherID]["roms"][romName]
                 romfile = os.path.basename(rom["filename"])
-                apppath = os.path.dirname(launcher["application"])
+                if ( rom["altapp"] != "" ):
+                    application = rom["altapp"]
+                else:
+                    application = launcher["application"]
+                apppath = os.path.dirname(application)
                 rompath = os.path.dirname(rom["filename"])
                 romname = os.path.splitext(romfile)[0]
 
@@ -1696,7 +1700,10 @@ class Main:
                             else:
                                 return ""
 
-                arguments = launcher["args"]
+                if ( rom["altarg"] != "" ):
+                    arguments = rom["altarg"]
+                else:
+                    arguments = launcher["args"]
                 arguments = arguments.replace("%rom%" , rom["filename"]).replace("%ROM%" , rom["filename"])
                 arguments = arguments.replace("%romfile%" , romfile).replace("%ROMFILE%" , romfile)
                 arguments = arguments.replace("%romname%" , romname).replace("%ROMNAME%" , romname)
@@ -1706,7 +1713,9 @@ class Main:
                 arguments = arguments.replace("%romtitle%" , rom["name"]).replace("%ROMTITLE%" , rom["name"])
                 arguments = arguments.replace("%romspath%" , launcher["rompath"]).replace("%ROMSPATH%" , launcher["rompath"])
 
-                if ( os.path.basename(launcher["application"]).lower().replace(".exe" , "") == "xbmc" ):
+                print "ALA : application" + application
+                print "ALA : arguments" + arguments
+                if ( os.path.basename(application).lower().replace(".exe" , "") == "xbmc" ):
                     xbmc.executebuiltin('XBMC.' + arguments)
                 else:
                     if ( xbmc.Player().isPlaying() ):
@@ -1723,7 +1732,7 @@ class Main:
                     if (os.environ.get( "OS", "xbox" ) == "xbox"):
                         f=open(SHORTCUT_FILE, "wb")
                         f.write("<shortcut>\n")
-                        f.write("    <path>" + launcher["application"] + "</path>\n")
+                        f.write("    <path>" + application + "</path>\n")
                         f.write("    <custom>\n")
                         f.write("       <game>" + rom["filename"] + "</game>\n")
                         f.write("    </custom>\n")
@@ -1735,7 +1744,7 @@ class Main:
                             if ( launcher["lnk"] == "true" ) and ( launcher["romext"] == "lnk" ):
                                 os.system("start \"\" \"%s\"" % (arguments))
                             else:
-                                if ( launcher["application"].split(".")[-1] == "bat" ):
+                                if ( application.split(".")[-1] == "bat" ):
                                     info = subprocess_hack.STARTUPINFO()
                                     info.dwFlags = 1
                                     if ( self.settings[ "show_batch" ] ):
@@ -1744,16 +1753,16 @@ class Main:
                                         info.wShowWindow = 0
                                 else:
                                     info = None
-                                startproc = subprocess_hack.Popen(r'%s %s' % (launcher["application"], arguments), cwd=apppath, startupinfo=info)
+                                startproc = subprocess_hack.Popen(r'%s %s' % (application, arguments), cwd=apppath, startupinfo=info)
                                 startproc.wait()
                         elif (sys.platform.startswith('linux')):
                             if ( self.settings[ "lirc_state" ] ):
                                 xbmc.executebuiltin('LIRC.stop')
-                            os.system("\"%s\" %s " % (launcher["application"], arguments))
+                            os.system("\"%s\" %s " % (application, arguments))
                             if ( self.settings[ "lirc_state" ] ):
                                 xbmc.executebuiltin('LIRC.start')
                         elif (sys.platform.startswith('darwin')):
-                            os.system("\"%s\" %s " % (launcher["application"], arguments))
+                            os.system("\"%s\" %s " % (application, arguments))
                         else:
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30609 )))
                     xbmc.sleep(self.settings[ "start_tempo" ])

@@ -1,3 +1,7 @@
+[B]2.0.2[/B]
+. Add alternative application option for each items.
+. Add alternative argument option for each items. 
+
 [B]2.0.1[/B]
 . Fix caterory creation bug.
 
