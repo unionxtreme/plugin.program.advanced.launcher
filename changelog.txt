@@ -1,3 +1,6 @@
+[B]2.0.3[/B]
+. Fix category assignment for files launcher creation.
+
 [B]2.0.2[/B]
 . Add alternative application option for each items.
 . Add alternative argument option for each items. 

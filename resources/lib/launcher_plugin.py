@@ -2856,7 +2856,7 @@ class Main:
                         # prepare launcher object data
                         launcherdata = {}
                         launcherdata["name"] = title
-                        launcherdata["category"] = "default"
+                        launcherdata["category"] = categoryID
                         launcherdata["application"] = app
                         launcherdata["args"] = args
                         launcherdata["rompath"] = path
