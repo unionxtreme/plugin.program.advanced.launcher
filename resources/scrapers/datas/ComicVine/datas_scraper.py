@@ -2,121 +2,74 @@
 
 import re
 import os
-import urllib,urllib2
+import urllib
 import simplejson
 
-# Get url with Mozilla User-Agent
-def get_url(url):
-    req_headers = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13','Referer': 'http://python.org'}
-    request = urllib2.Request(url, headers=req_headers)
-    opener = urllib2.build_opener()
-    response = opener.open(request)
-    contents = response.read().replace('\r\n', '').replace('\n', '')
-    return contents
+comicvine_api_key = "a1aaa516eaf233abf29c8aefaa46dc39cc0f0873"
+comicvine_api_url = "http://beta.comicvine.com/api"
 
-# Remove HTML tags
-def striphtml(data):
-    p = re.compile(r'<.*?>')
-    return p.sub('', data)
-
-# Return Comics search list
 def _get_games_list(search):
-    comicvine_key = "a1aaa516eaf233abf29c8aefaa46dc39cc0f0873"
     results = []
     display = []
-    search = urllib.quote(search.lower())
     try:
-        url = get_url('http://www.google.com/cse?cx=017553361912933201960%3Ag3cbzpf3qis&q="'+search+'"&as_occt=title&nojs=1&num=100')
-        issues = re.findall('<a class="l" href="(.*?)" (.*?)>(.*?)</a>', url)
-        for i in issues:
+        f = urllib.urlopen('http://www.comicvine.com/search/?indices[0]=cv_issue&q="'+urllib.quote(search.lower())+'"')
+        page = f.read().replace('\r\n', '').replace('\n', '').strip('\t')
+        issues = re.findall('/4000-(.*?)/">        <div class="img imgflare">                      <img src="(.*?)" alt="(.*?)">                  </div>        <h3 class="title">          (.*?)        </h3>        <p class="specs icon icon-tags">          <span class="type"><span class="search-company">(.*?)</span> <span class="search-type">issue</span> <span class="search-publish-date">\((.*?)\)</span>', page)
+        for issue in issues:
             comic = {}
-            comic_id = i[0].split('/')
-            issue_id = comic_id[-2].rsplit('-',1)
-            page_type = issue_id[0]
-            if ( issue_id[-1].isdigit()) and ( issue_id[0] == "37" ):
-                comic["id"] = str(issue_id[-1].encode('utf-8','ignore'))
-                f = urllib.urlopen('http://api.comicvine.com/issue/'+comic["id"]+'/?api_key='+comicvine_key+'&format=xml&field_list=publish_year,description,volume,name,issue_number')
-                page = f.read().replace('\r\n', '').replace('\n', '')
-                volume_name = ''.join(re.findall('</id><name><!\[CDATA\[(.*?)\]\]></name></volume>', page))
-                issue_number = ''.join(re.findall('<issue_number>(.*?)</issue_number>', page))
-                issue_name = ''.join(re.findall('</issue_number><name><!\[CDATA\[(.*?)\]\]></name><publish_year>', page))
-                release = ''.join(re.findall('<publish_year>(.*?)</publish_year>', page))
-                comic["title"] = str(volume_name)
-                if ( issue_number != "" ):
-                    comic["title"] += ' #'+'{0:.3g}'.format(float(issue_number))
-                if ( issue_name != "" ):
-                    comic["title"] += ': '+issue_name
-                if ( release != "" ):
-                    comic["title"] += ' ('+release+')'
-                comic["gamesys"] = 'Comic'
-                results.append(comic)
-                display.append(comic["title"].encode('utf-8','ignore'))
+            comic["id"] = issue[0]
+            comic["title"] = unescape(issue[2])
+            comic["studio"] = issue[4]
+            comic["release"] = issue[5][-4:]
+            comic["order"] = 1
+            comic_volume = comic["title"].split(' - ')
+            if ( comic_volume[0].lower() == search.lower() ):
+                comic["order"] += 1
+            if ( comic["title"].lower() == search.lower() ):
+                comic["order"] += 1
+            if ( comic["title"].lower().find(search.lower()) != -1 ):
+                comic["order"] += 1
+            results.append(comic)
+        results.sort(key=lambda result: result["order"], reverse=True)
+        for result in results:
+            display.append(result["title"].encode('utf-8','ignore')+' ('+result["studio"].encode('utf-8','ignore')+' / '+result["release"].encode('utf-8','ignore')+')')
         return results,display
     except:
         return results,display
         
 # Return 1st Comic search
 def _get_first_game(search,gamesys):
-    comicvine_key = "a1aaa516eaf233abf29c8aefaa46dc39cc0f0873"
-    results = []
-    search = urllib.quote(search.lower())
-    try:
-        url = get_url('http://www.google.com/cse?cx=017553361912933201960%3Ag3cbzpf3qis&q="'+search+'"&as_occt=title&nojs=1&num=100')
-        issues = re.findall('<a class="l" href="(.*?)" (.*?)>(.*?)</a>', url)
-        for i in issues:
-            comic = {}
-            comic_id = i[0].split('/')
-            issue_id = comic_id[-2].rsplit('-',1)
-            page_type = issue_id[0]
-            if ( issue_id[-1].isdigit()) and ( issue_id[0] == "37" ):
-                comic["id"] = str(issue_id[-1].encode('utf-8','ignore'))
-                f = urllib.urlopen('http://api.comicvine.com/issue/'+comic["id"]+'/?api_key='+comicvine_key+'&format=xml&field_list=publish_year,description,volume,name,issue_number')
-                page = f.read().replace('\r\n', '').replace('\n', '')
-                volume_name = ''.join(re.findall('</id><name><!\[CDATA\[(.*?)\]\]></name></volume>', page))
-                issue_number = ''.join(re.findall('<issue_number>(.*?)</issue_number>', page))
-                issue_name = ''.join(re.findall('</issue_number><name><!\[CDATA\[(.*?)\]\]></name><publish_year>', page))
-                release = ''.join(re.findall('<publish_year>(.*?)</publish_year>', page))
-                comic["title"] = str(volume_name)
-                if ( issue_number != "" ):
-                    comic["title"] += ' #'+'{0:.3g}'.format(float(issue_number))
-                if ( issue_name != "" ):
-                    comic["title"] += ': '+issue_name
-                if ( release != "" ):
-                    comic["title"] += ' ('+release+')'
-                comic["gamesys"] = 'Comic'
-                results.append(comic)
-        return results
-    except:
-        return results
-        
+    results,display = _get_games_list(search)
+    return results
+
 # Return Comic data
-def _get_game_data(game_id):
-    comicvine_key = "a1aaa516eaf233abf29c8aefaa46dc39cc0f0873"
-    gamedata = {}
-    gamedata["genre"] = ""
-    gamedata["release"] = ""
-    gamedata["studio"] = ""
-    gamedata["plot"] = ""
+def _get_game_data(comic_id):
+    comicdata = {}
+    comicdata["genre"] = "Comic"
+    comicdata["release"] = ""
+    comicdata["studio"] = ""
+    comicdata["plot"] = ""
     try:
-        f = urllib.urlopen('http://api.comicvine.com/issue/'+game_id+'/?api_key='+comicvine_key+'&format=xml&field_list=publish_year,description,volume,name,issue_number')
-        page = f.read().replace('\r\n', '').replace('\n', '')
-        release_date = ''.join(re.findall('<publish_year>(.*?)</publish_year>', page))
-        gamedata["release"] = release_date.encode('utf-8','ignore')
-        plot = ''.join(re.findall('<description><!\[CDATA\[(.*?)\]\]></description>', page))
-        title = re.findall('<name><!\[CDATA\[(.*?)\]\]></name>', page)
-        p = re.compile(r'<.*?>')
-        gamedata["plot"] = unescape(p.sub('', title[0].encode('utf-8','ignore')+" : "+plot.encode('utf-8','ignore')))
-        volume = ''.join(re.findall('<api_detail_url><!\[CDATA\[(.*?)\]\]></api_detail_url>', page))
-        if volume:
-            f = urllib.urlopen(volume+'?api_key='+comicvine_key+'&format=xml&field_list=publisher')
-            page = f.read().replace('\r\n', '').replace('\n', '')
-            studio = ''.join(re.findall('<name><!\[CDATA\[(.*?)\]\]></name>', page))
-            gamedata["studio"] = studio.encode('utf-8','ignore')
-        return gamedata
+        f = urllib.urlopen(comicvine_api_url+'/issue/'+comic_id+'/?api_key='+comicvine_api_key+'&format=json&field_list=cover_date,description,volume,name,issue_number')
+        json = simplejson.loads(f.read())
+        f.close()
+        if ( json['results']['cover_date'] ):
+            comicdata["release"] = str(json['results']['cover_date'])[0:4]
+        if ( json['results']['description'] ):
+            p = re.compile(r'<.*?>')
+            comicdata["plot"] = p.sub('', unescape(json['results']['description'].encode('utf-8','ignore')))
+        if ( json['results']['volume'] ):
+            f = urllib.urlopen(comicvine_api_url+'/volume/'+str(json['results']['volume']['id'])+'/?api_key='+comicvine_api_key+'&format=json&field_list=publisher')
+            json2 = simplejson.loads(f.read())
+            f.close()
+            if ( json2['results']['publisher'] ):
+                comicdata["studio"] = str(json2['results']['publisher']['name']).encode('utf-8','ignore')
+        return comicdata
     except:
-        return gamedata
-        
+        return comicdata
+
 def unescape(s):
+    s = s.replace('</p>',' ')
     s = s.replace('<br />',' ')
     s = s.replace("&lt;", "<")
     s = s.replace("&gt;", ">")
