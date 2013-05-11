@@ -1724,15 +1724,15 @@ class Main:
                 if ( os.path.basename(application).lower().replace(".exe" , "") == "xbmc" ):
                     xbmc.executebuiltin('XBMC.' + arguments)
                 else:
-                if ( self.settings[ "media_state" ] != "2" ):
-                    if ( xbmc.Player().isPlaying() ):
-                        if ( self.settings[ "media_state" ] == "0" ):
-                            xbmc.executebuiltin('PlayerControl(Stop)')
-                        if ( self.settings[ "media_state" ] == "1" ):
-                            xbmc.executebuiltin('PlayerControl(Play)')
-                        xbmc.sleep(2*self.settings[ "start_tempo" ])
-                    xbmc.audioSuspend()
-                    xbmc.enableNavSounds(False)                                 
+                    if ( self.settings[ "media_state" ] != "2" ):
+                        if ( xbmc.Player().isPlaying() ):
+                            if ( self.settings[ "media_state" ] == "0" ):
+                                xbmc.executebuiltin('PlayerControl(Stop)')
+                            if ( self.settings[ "media_state" ] == "1" ):
+                                xbmc.executebuiltin('PlayerControl(Play)')
+                            xbmc.sleep(2*self.settings[ "start_tempo" ])
+                        xbmc.audioSuspend()
+                        xbmc.enableNavSounds(False)                                 
                     if (launcher["minimize"] == "true"):
                         _toogle_fullscreen()
                     if ( self.settings[ "launcher_notification" ] ):
@@ -1766,7 +1766,7 @@ class Main:
                                 startproc.wait()
                         elif (sys.platform.startswith('linux')):
                             if ( self.settings[ "lirc_state" ] ):
-                                xbmc.executebuiltin('LIRC.stop')z
+                                xbmc.executebuiltin('LIRC.stop')
                             os.system("\"%s\" %s " % (application, arguments))
                             if ( self.settings[ "lirc_state" ] ):
                                 xbmc.executebuiltin('LIRC.start')
@@ -1775,12 +1775,12 @@ class Main:
                         else:
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30609 )))
                     xbmc.sleep(self.settings[ "start_tempo" ])
-                if ( self.settings[ "media_state" ] != "2" ):
-                    xbmc.audioResume()
-                    xbmc.enableNavSounds(True)                            
-                    if ( self.settings[ "media_state" ] == "1" ):
-                        xbmc.sleep(2*self.settings[ "start_tempo" ])
-                        xbmc.executebuiltin('PlayerControl(Play)')
+                    if ( self.settings[ "media_state" ] != "2" ):
+                        xbmc.audioResume()
+                        xbmc.enableNavSounds(True)                            
+                        if ( self.settings[ "media_state" ] == "1" ):
+                            xbmc.sleep(2*self.settings[ "start_tempo" ])
+                            xbmc.executebuiltin('PlayerControl(Play)')
 
     ''' get an xml data from an xml file '''
     def get_xml_source( self, xmlpath ):
