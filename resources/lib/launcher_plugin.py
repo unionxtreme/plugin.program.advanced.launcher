@@ -1537,16 +1537,16 @@ class Main:
                 if ( self.settings[ "media_state" ] != "2" ):
                     if ( xbmc.Player().isPlaying() ):
                         if ( self.settings[ "media_state" ] == "0" ):
-                            xbmc.executebuiltin('PlayerControl(Stop)')
+                            xbmc.Player().stop()
                         if ( self.settings[ "media_state" ] == "1" ):
-                            xbmc.executebuiltin('PlayerControl(Play)')
-                        xbmc.sleep(2*self.settings[ "start_tempo" ])
-                    xbmc.audioSuspend()
-                    xbmc.enableNavSounds(False)                                 
+                            xbmc.Player().pause()
+                        xbmc.sleep(self.settings[ "start_tempo" ]+100)
+                        xbmc.audioSuspend()
                 if (launcher["minimize"] == "true"):
                     _toogle_fullscreen()
                 if ( self.settings[ "launcher_notification" ] ):
                     xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30034 ) % launcher["name"]))
+                xbmc.enableNavSounds(False)                                 
                 xbmc.sleep(self.settings[ "start_tempo" ])
                 if (os.environ.get( "OS", "xbox" ) == "xbox"):
                     xbmc.executebuiltin('XBMC.Runxbe(' + launcher["application"] + ')')
@@ -1579,12 +1579,12 @@ class Main:
                 xbmc.sleep(self.settings[ "start_tempo" ])
                 if (launcher["minimize"] == "true"):
                     _toogle_fullscreen()
+                xbmc.enableNavSounds(True)                            
                 if ( self.settings[ "media_state" ] != "2" ):
                     xbmc.audioResume()
-                    xbmc.enableNavSounds(True)                            
                     if ( self.settings[ "media_state" ] == "1" ):
-                        xbmc.sleep(2*self.settings[ "start_tempo" ])
-                        xbmc.executebuiltin('PlayerControl(Play)')
+                        xbmc.sleep(self.settings[ "start_tempo" ]+100)
+                        xbmc.Player().play()
 
     def _get_settings( self ):
         # get the users preference settings
@@ -1727,16 +1727,16 @@ class Main:
                     if ( self.settings[ "media_state" ] != "2" ):
                         if ( xbmc.Player().isPlaying() ):
                             if ( self.settings[ "media_state" ] == "0" ):
-                                xbmc.executebuiltin('PlayerControl(Stop)')
+                                xbmc.Player().stop()
                             if ( self.settings[ "media_state" ] == "1" ):
-                                xbmc.executebuiltin('PlayerControl(Play)')
-                            xbmc.sleep(2*self.settings[ "start_tempo" ])
-                        xbmc.audioSuspend()
-                        xbmc.enableNavSounds(False)                                 
+                                xbmc.Player().pause()
+                            xbmc.sleep(self.settings[ "start_tempo" ]+100)
+                            xbmc.audioSuspend()
                     if (launcher["minimize"] == "true"):
                         _toogle_fullscreen()
                     if ( self.settings[ "launcher_notification" ] ):
                         xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30034 ) % rom["name"]))
+                    xbmc.enableNavSounds(False)                                 
                     xbmc.sleep(self.settings[ "start_tempo" ])
                     if (os.environ.get( "OS", "xbox" ) == "xbox"):
                         f=open(SHORTCUT_FILE, "wb")
@@ -1775,12 +1775,12 @@ class Main:
                         else:
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30609 )))
                     xbmc.sleep(self.settings[ "start_tempo" ])
+                    xbmc.enableNavSounds(True)                            
                     if ( self.settings[ "media_state" ] != "2" ):
                         xbmc.audioResume()
-                        xbmc.enableNavSounds(True)                            
                         if ( self.settings[ "media_state" ] == "1" ):
-                            xbmc.sleep(2*self.settings[ "start_tempo" ])
-                            xbmc.executebuiltin('PlayerControl(Play)')
+                            xbmc.sleep(self.settings[ "start_tempo" ]+100)
+                            xbmc.Player().play()
 
     ''' get an xml data from an xml file '''
     def get_xml_source( self, xmlpath ):

@@ -1,3 +1,6 @@
+[B]2.0.6[/B]
+. Fix audio sound loop when starting an application.
+
 [B]2.0.5[/B]
 . Fix AudioEngine hog (thanks to fritsch and Nortin).
 
