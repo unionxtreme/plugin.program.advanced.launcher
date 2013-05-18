@@ -1260,7 +1260,7 @@ class Main:
             for key in self.categories:
                 categories_id.append(self.categories[key]['id'])
                 categories_name.append(self.categories[key]['name'])
-            selected_cat = dialog.select(__language__( 30077 ), categories_name)
+            selected_cat = dialog.select(__language__( 30114 ), categories_name)
             if (not selected_cat == -1 ):
                 self.launchers[launcherID]["category"] = categories_id[selected_cat]
                 self._save_launchers()
