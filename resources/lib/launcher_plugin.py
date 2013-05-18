@@ -689,7 +689,7 @@ class Main:
         xbmc.executebuiltin("Container.Update")
 
     def _scrap_fanart_rom_algo(self, launcher, rom, title):
-        xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000)" % (__language__( 30000 ), __language__( 30071 ) % (self.launchers[launcher]["roms"][rom]["name"],(self.settings[ "fanarts_scraper" ]).encode('utf-8','ignore'))))
+        xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000)" % (__language__( 30000 ), __language__( 30071 ) % (self.launchers[launcher]["roms"][rom]["name"],self.settings[ "fanarts_scraper" ].encode('utf-8','ignore'))))
         full_fanarts = self._get_fanarts_list(self.launchers[launcher]["roms"][rom]["gamesys"],title,self.settings[ "fanart_image_size" ])
         if full_fanarts:
             nb_images = len(full_fanarts)
@@ -727,7 +727,7 @@ class Main:
                     else:
                         xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30073 ) % (self.launchers[launcher]["roms"][rom]["name"])))
         else:
-            xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30071 ) % (self.launchers[launcher]["roms"][rom]["name"])))
+            xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30073 ) % (self.launchers[launcher]["roms"][rom]["name"])))
 
     def _scrap_fanart_category_algo(self, categoryID, title):
         xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000)" % (__language__( 30000 ), __language__( 30071 ) % (self.categories[categoryID]["name"],(self.settings[ "fanarts_scraper" ]).encode('utf-8','ignore'))))
