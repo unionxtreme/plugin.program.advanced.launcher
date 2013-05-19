@@ -202,6 +202,7 @@
     <string id="30346">Deleting "%s" will also delete related launchers.</string>
     <string id="30347">Alternative application : %s</string>
     <string id="30348">Alternative arguments : %s</string>
+    <string id="30349">Items list is empty : Add items first.</string>
     
     <string id="30400">Search items...</string>
     <string id="30401">By Title</string>
@@ -220,17 +221,19 @@
     <string id="30503">not found</string>
     <string id="30512">Search</string>
 
-    <string id="30600">Error: cannot create backup file.</string>
-    <string id="30601">Error: cannot create launchers.xml file.</string>
-    <string id="30602">Error: cannot access launchers.xml file.</string>
-    <string id="30603">Error: cannot write launchers.xml file.</string>
-    <string id="30604">Error: cannot download thumb image.</string>
-    <string id="30605">Error: cannot save thumb image.</string>
-    <string id="30606">Error: cannot download fanart image.</string>
-    <string id="30607">Error: cannot save fanart image.</string>
-    <string id="30608">Error: cannot update cached image.</string>
-    <string id="30609">Error: cannot start application.</string>
-    <string id="30610">Error: cannot list directory items.</string>
+    <string id="30600">Cannot create backup file.</string>
+    <string id="30601">Cannot create launchers.xml file.</string>
+    <string id="30602">Cannot access launchers.xml file.</string>
+    <string id="30603">Cannot write launchers.xml file.</string>
+    <string id="30604">Cannot download thumb image.</string>
+    <string id="30605">Cannot save thumb image.</string>
+    <string id="30606">Cannot download fanart image.</string>
+    <string id="30607">Cannot save fanart image.</string>
+    <string id="30608">Cannot update cached image.</string>
+    <string id="30609">Cannot start application.</string>
+    <string id="30610">Cannot list directory items.</string>
+    <string id="30611">File %s not found.</string>
+    <string id="30612">Error</string>
 
     <string id="30700">Initialisation</string>
     <string id="30701">Launcher %s selected</string>
@@ -274,4 +277,8 @@
     <string id="30739">Advanced Launcher root folder > Categories list</string>
     <string id="30740">%s category folder > Launcher list</string>
     <string id="30741">URL received : %s</string>
+    <string id="30742">application : %s</string>
+    <string id="30743">arguments : %s</string>
+    <string id="30744">plugin.program.advanced.launcher</string>
+    <string id="30745">Error: %s::%s (%d) - %s</string>
 </strings>
