@@ -1,4 +1,5 @@
 [B]2.0.8[/B]
+. Fix non-existing category bug.
 . Add empty launcher display message.
 . Add file/directory path not exist error messages.
 

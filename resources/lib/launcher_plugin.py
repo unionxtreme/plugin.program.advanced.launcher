@@ -2767,161 +2767,165 @@ class Main:
 
 
     def _add_new_launcher ( self, categoryID ) :
-        dialog = xbmcgui.Dialog()
-        type = dialog.select(__language__( 30101 ), [__language__( 30021 ), __language__( 30022 ),__language__( 30051 )])
-        if (os.environ.get( "OS", "xbox" ) == "xbox"):
-            filter = ".xbe|.cut"
-        else:
-            if (sys.platform == "win32"):
-                filter = ".bat|.exe|.cmd|.lnk"
+        if ( self.categories.has_key(categoryID) ):
+            dialog = xbmcgui.Dialog()
+            type = dialog.select(__language__( 30101 ), [__language__( 30021 ), __language__( 30022 ),__language__( 30051 )])
+            if (os.environ.get( "OS", "xbox" ) == "xbox"):
+                filter = ".xbe|.cut"
             else:
-                filter = ""
-
-        if (type == 0):
-            app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files",filter)
-            if (app):
-                argument = self._get_program_arguments(os.path.basename(app))
-                argkeyboard = xbmc.Keyboard(argument, __language__( 30024 ))
-                argkeyboard.doModal()
-                args = argkeyboard.getText()
-                title = os.path.basename(app)
-                keyboard = xbmc.Keyboard(title.replace('.'+title.split('.')[-1],'').replace('.',' '), __language__( 30025 ))
-                keyboard.doModal()
-                title = keyboard.getText()
-                if ( title == "" ):
-                    title = os.path.basename(app)
-                    title = title.replace('.'+title.split('.')[-1],'').replace('.',' ')
-                # Selection of the launcher game system
-                dialog = xbmcgui.Dialog()
-                platforms = _get_game_system_list()
-                gamesystem = dialog.select(__language__( 30077 ), platforms)
-                # Selection of the thumbnails and fanarts path
-                if ( self.settings[ "launcher_thumb_path" ] == "" ):
-                    thumb_path = xbmcgui.Dialog().browse(0,__language__( 30059 ),"files","", False, False)
-                else:
-                    thumb_path = self.settings[ "launcher_thumb_path" ]
-                if ( self.settings[ "launcher_fanart_path" ] == "" ):
-                    fanart_path = xbmcgui.Dialog().browse(0,__language__( 30060 ),"files","", False, False)
-                else:
-                    fanart_path = self.settings[ "launcher_fanart_path" ]
-                # prepare launcher object data
-                launcherdata = {}
-                launcherdata["name"] = title
-                launcherdata["category"] = categoryID
-                launcherdata["application"] = app
-                launcherdata["args"] = args
-                launcherdata["rompath"] = ""
-                if (thumb_path):
-                    launcherdata["thumbpath"] = thumb_path
-                else:
-                    launcherdata["thumbpath"] = ""
-                if (fanart_path):
-                    launcherdata["fanartpath"] = fanart_path
-                else:
-                    launcherdata["fanartpath"] = ""
-                launcherdata["custompath"] = ""
-                launcherdata["trailerpath"] = ""
-                launcherdata["romext"] = ""
-                if (not gamesystem == -1 ):
-                    launcherdata["gamesys"] = platforms[gamesystem]
-                else:
-                    launcherdata["gamesys"] = ""
-                launcherdata["thumb"] = ""
-                launcherdata["fanart"] = ""
-                launcherdata["genre"] = ""
-                launcherdata["release"] = ""
-                launcherdata["studio"] = ""
-                launcherdata["plot"] = ""
-                launcherdata["finished"] = "false"
                 if (sys.platform == "win32"):
-                    launcherdata["lnk"] = "true"
+                    filter = ".bat|.exe|.cmd|.lnk"
                 else:
-                    launcherdata["lnk"] = ""
-                launcherdata["minimize"] = "false"
-                launcherdata["roms"] = {}
+                    filter = ""
 
-                # add launcher to the launchers list (using name as index)
-                launcherid = _get_SID()
-                self.launchers[launcherid] = launcherdata
-                self._save_launchers()
-
-                xbmc.executebuiltin("ReplaceWindow(Programs,%s?%s)" % (self._path,categoryID))
-                return True
-
-        if (type == 1):
-            app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files",filter)
-            if (app):
-                path = xbmcgui.Dialog().browse(0,__language__( 30058 ),"files", "", False, False)
-                if (path):
-                    extensions = self._get_program_extensions(os.path.basename(app))
-                    extkey = xbmc.Keyboard(extensions, __language__( 30028 ))
-                    extkey.doModal()
-                    if (extkey.isConfirmed()):
-                        ext = extkey.getText()
-                        argument = self._get_program_arguments(os.path.basename(app))
-                        argkeyboard = xbmc.Keyboard(argument, __language__( 30024 ))
-                        argkeyboard.doModal()
-                        args = argkeyboard.getText()
+            if (type == 0):
+                app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files",filter)
+                if (app):
+                    argument = self._get_program_arguments(os.path.basename(app))
+                    argkeyboard = xbmc.Keyboard(argument, __language__( 30024 ))
+                    argkeyboard.doModal()
+                    args = argkeyboard.getText()
+                    title = os.path.basename(app)
+                    keyboard = xbmc.Keyboard(title.replace('.'+title.split('.')[-1],'').replace('.',' '), __language__( 30025 ))
+                    keyboard.doModal()
+                    title = keyboard.getText()
+                    if ( title == "" ):
                         title = os.path.basename(app)
-                        keyboard = xbmc.Keyboard(title.replace('.'+title.split('.')[-1],'').replace('.',' '), __language__( 30025 ))
-                        keyboard.doModal()
-                        title = keyboard.getText()
-                        if ( title == "" ):
+                        title = title.replace('.'+title.split('.')[-1],'').replace('.',' ')
+                    # Selection of the launcher game system
+                    dialog = xbmcgui.Dialog()
+                    platforms = _get_game_system_list()
+                    gamesystem = dialog.select(__language__( 30077 ), platforms)
+                    # Selection of the thumbnails and fanarts path
+                    if ( self.settings[ "launcher_thumb_path" ] == "" ):
+                        thumb_path = xbmcgui.Dialog().browse(0,__language__( 30059 ),"files","", False, False)
+                    else:
+                        thumb_path = self.settings[ "launcher_thumb_path" ]
+                    if ( self.settings[ "launcher_fanart_path" ] == "" ):
+                        fanart_path = xbmcgui.Dialog().browse(0,__language__( 30060 ),"files","", False, False)
+                    else:
+                        fanart_path = self.settings[ "launcher_fanart_path" ]
+                    # prepare launcher object data
+                    launcherdata = {}
+                    launcherdata["name"] = title
+                    launcherdata["category"] = categoryID
+                    launcherdata["application"] = app
+                    launcherdata["args"] = args
+                    launcherdata["rompath"] = ""
+                    if (thumb_path):
+                        launcherdata["thumbpath"] = thumb_path
+                    else:
+                        launcherdata["thumbpath"] = ""
+                    if (fanart_path):
+                        launcherdata["fanartpath"] = fanart_path
+                    else:
+                        launcherdata["fanartpath"] = ""
+                    launcherdata["custompath"] = ""
+                    launcherdata["trailerpath"] = ""
+                    launcherdata["romext"] = ""
+                    if (not gamesystem == -1 ):
+                        launcherdata["gamesys"] = platforms[gamesystem]
+                    else:
+                        launcherdata["gamesys"] = ""
+                    launcherdata["thumb"] = ""
+                    launcherdata["fanart"] = ""
+                    launcherdata["genre"] = ""
+                    launcherdata["release"] = ""
+                    launcherdata["studio"] = ""
+                    launcherdata["plot"] = ""
+                    launcherdata["finished"] = "false"
+                    if (sys.platform == "win32"):
+                        launcherdata["lnk"] = "true"
+                    else:
+                        launcherdata["lnk"] = ""
+                    launcherdata["minimize"] = "false"
+                    launcherdata["roms"] = {}
+
+                    # add launcher to the launchers list (using name as index)
+                    launcherid = _get_SID()
+                    self.launchers[launcherid] = launcherdata
+                    self._save_launchers()
+
+                    xbmc.executebuiltin("ReplaceWindow(Programs,%s?%s)" % (self._path,categoryID))
+                    return True
+
+            if (type == 1):
+                app = xbmcgui.Dialog().browse(1,__language__( 30023 ),"files",filter)
+                if (app):
+                    path = xbmcgui.Dialog().browse(0,__language__( 30058 ),"files", "", False, False)
+                    if (path):
+                        extensions = self._get_program_extensions(os.path.basename(app))
+                        extkey = xbmc.Keyboard(extensions, __language__( 30028 ))
+                        extkey.doModal()
+                        if (extkey.isConfirmed()):
+                            ext = extkey.getText()
+                            argument = self._get_program_arguments(os.path.basename(app))
+                            argkeyboard = xbmc.Keyboard(argument, __language__( 30024 ))
+                            argkeyboard.doModal()
+                            args = argkeyboard.getText()
                             title = os.path.basename(app)
-                            title = title.replace('.'+title.split('.')[-1],'').replace('.',' ')
-                        # Selection of the launcher game system
-                        dialog = xbmcgui.Dialog()
-                        platforms = _get_game_system_list()
-                        gamesystem = dialog.select(__language__( 30077 ), platforms)
-                        # Selection of the thumbnails and fanarts path
-                        thumb_path = xbmcgui.Dialog().browse(0,__language__( 30059 ),"files","", False, False, os.path.join(path))
-                        fanart_path = xbmcgui.Dialog().browse(0,__language__( 30060 ),"files","", False, False, os.path.join(path))
-                        # prepare launcher object data
-                        launcherdata = {}
-                        launcherdata["name"] = title
-                        launcherdata["category"] = categoryID
-                        launcherdata["application"] = app
-                        launcherdata["args"] = args
-                        launcherdata["rompath"] = path
-                        if (thumb_path):
-                            launcherdata["thumbpath"] = thumb_path
-                        else:
-                            launcherdata["thumbpath"] = ""
-                        if (fanart_path):
-                            launcherdata["fanartpath"] = fanart_path
-                        else:
-                            launcherdata["fanartpath"] = ""
-                        launcherdata["custompath"] = ""
-                        launcherdata["trailerpath"] = ""
-                        launcherdata["romext"] = ext
-                        if (not gamesystem == -1 ):
-                            launcherdata["gamesys"] = platforms[gamesystem]
-                        else:
-                            launcherdata["gamesys"] = ""
-                        launcherdata["thumb"] = ""
-                        launcherdata["fanart"] = ""
-                        launcherdata["genre"] = ""
-                        launcherdata["release"] = ""
-                        launcherdata["studio"] = ""
-                        launcherdata["plot"] = ""
-                        launcherdata["finished"] = "false"
-                        if (sys.platform == "win32"):
-                            launcherdata["lnk"] = "true"
-                        else:
-                            launcherdata["lnk"] = ""
-                        launcherdata["minimize"] = "false"
-                        launcherdata["roms"] = {}
+                            keyboard = xbmc.Keyboard(title.replace('.'+title.split('.')[-1],'').replace('.',' '), __language__( 30025 ))
+                            keyboard.doModal()
+                            title = keyboard.getText()
+                            if ( title == "" ):
+                                title = os.path.basename(app)
+                                title = title.replace('.'+title.split('.')[-1],'').replace('.',' ')
+                            # Selection of the launcher game system
+                            dialog = xbmcgui.Dialog()
+                            platforms = _get_game_system_list()
+                            gamesystem = dialog.select(__language__( 30077 ), platforms)
+                            # Selection of the thumbnails and fanarts path
+                            thumb_path = xbmcgui.Dialog().browse(0,__language__( 30059 ),"files","", False, False, os.path.join(path))
+                            fanart_path = xbmcgui.Dialog().browse(0,__language__( 30060 ),"files","", False, False, os.path.join(path))
+                            # prepare launcher object data
+                            launcherdata = {}
+                            launcherdata["name"] = title
+                            launcherdata["category"] = categoryID
+                            launcherdata["application"] = app
+                            launcherdata["args"] = args
+                            launcherdata["rompath"] = path
+                            if (thumb_path):
+                                launcherdata["thumbpath"] = thumb_path
+                            else:
+                                launcherdata["thumbpath"] = ""
+                            if (fanart_path):
+                                launcherdata["fanartpath"] = fanart_path
+                            else:
+                                launcherdata["fanartpath"] = ""
+                            launcherdata["custompath"] = ""
+                            launcherdata["trailerpath"] = ""
+                            launcherdata["romext"] = ext
+                            if (not gamesystem == -1 ):
+                                launcherdata["gamesys"] = platforms[gamesystem]
+                            else:
+                                launcherdata["gamesys"] = ""
+                            launcherdata["thumb"] = ""
+                            launcherdata["fanart"] = ""
+                            launcherdata["genre"] = ""
+                            launcherdata["release"] = ""
+                            launcherdata["studio"] = ""
+                            launcherdata["plot"] = ""
+                            launcherdata["finished"] = "false"
+                            if (sys.platform == "win32"):
+                                launcherdata["lnk"] = "true"
+                            else:
+                                launcherdata["lnk"] = ""
+                            launcherdata["minimize"] = "false"
+                            launcherdata["roms"] = {}
 
-                        # add launcher to the launchers list (using name as index)
-                        launcherid = _get_SID()
-                        self.launchers[launcherid] = launcherdata
-                        self._save_launchers()
-                        xbmc.executebuiltin("ReplaceWindow(Programs,%s?%s)" % (self._path,categoryID))
-                        return True
-        if (type == 2):
-            self._file_manager()
-
-        return False
+                            # add launcher to the launchers list (using name as index)
+                            launcherid = _get_SID()
+                            self.launchers[launcherid] = launcherdata
+                            self._save_launchers()
+                            xbmc.executebuiltin("ReplaceWindow(Programs,%s?%s)" % (self._path,categoryID))
+                            return True
+            if (type == 2):
+                self._file_manager()
+        else:
+            xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 )+" - "+__language__( 30612 ), __language__( 30613 )))
+            xbmc.executebuiltin("ReplaceWindow(Programs,%s)" % (self._path))
+            return False
+            
 
     def _file_manager( self ):
         xbmc.executebuiltin("ActivateWindow(filemanager)")

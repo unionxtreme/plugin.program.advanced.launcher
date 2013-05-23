@@ -234,6 +234,7 @@
     <string id="30610">Cannot list directory items.</string>
     <string id="30611">File %s not found.</string>
     <string id="30612">Error</string>
+    <string id="30613">Target category not found.</string>
 
     <string id="30700">Initialisation</string>
     <string id="30701">Launcher %s selected</string>
