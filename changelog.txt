@@ -1,3 +1,6 @@
+[B]2.0.9[/B]
+. Restore post-Frodo XBMC versions compatibility.
+
 [B]2.0.8[/B]
 . Fix non-existing category bug.
 . Add empty launcher display message.

@@ -1541,7 +1541,10 @@ class Main:
                             if ( self.settings[ "media_state" ] == "1" ):
                                 xbmc.Player().pause()
                             xbmc.sleep(self.settings[ "start_tempo" ]+100)
-                            xbmc.audioSuspend()
+                            try:
+                                xbmc.audioSuspend()
+                            except:
+                                pass
                     if (launcher["minimize"] == "true"):
                         _toogle_fullscreen()
                     if ( self.settings[ "launcher_notification" ] ):
@@ -1581,7 +1584,10 @@ class Main:
                         _toogle_fullscreen()
                     xbmc.enableNavSounds(True)                            
                     if ( self.settings[ "media_state" ] != "2" ):
-                        xbmc.audioResume()
+                        try:
+                            xbmc.audioResume()
+                        except:
+                            pass
                         if ( self.settings[ "media_state" ] == "1" ):
                             xbmc.sleep(self.settings[ "start_tempo" ]+100)
                             xbmc.Player().play()
@@ -1735,7 +1741,10 @@ class Main:
                                     if ( self.settings[ "media_state" ] == "1" ):
                                         xbmc.Player().pause()
                                     xbmc.sleep(self.settings[ "start_tempo" ]+100)
-                                    xbmc.audioSuspend()
+                                    try:
+                                        xbmc.audioSuspend()
+                                    except:
+                                        pass
                             if (launcher["minimize"] == "true"):
                                 _toogle_fullscreen()
                             if ( self.settings[ "launcher_notification" ] ):
@@ -1781,7 +1790,10 @@ class Main:
                             xbmc.sleep(self.settings[ "start_tempo" ])
                             xbmc.enableNavSounds(True)                            
                             if ( self.settings[ "media_state" ] != "2" ):
-                                xbmc.audioResume()
+                                try:
+                                    xbmc.audioResume()
+                                except:
+                                    pass
                                 if ( self.settings[ "media_state" ] == "1" ):
                                     xbmc.sleep(self.settings[ "start_tempo" ]+100)
                                     xbmc.Player().play()
