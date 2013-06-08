@@ -220,6 +220,7 @@
     <string id="30502">%s entries removed successfully</string>
     <string id="30503">not found</string>
     <string id="30512">Search</string>
+    <string id="30513">Add Results to Favourites</string>
 
     <string id="30600">Cannot create backup file.</string>
     <string id="30601">Cannot create launchers.xml file.</string>

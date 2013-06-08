@@ -1549,7 +1549,10 @@ class Main:
                         _toogle_fullscreen()
                     if ( self.settings[ "launcher_notification" ] ):
                         xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30034 ) % launcher["name"]))
-                    xbmc.enableNavSounds(False)                                 
+                    try:
+                        xbmc.enableNavSounds(False)                                 
+                    except:
+                        pass
                     xbmc.sleep(self.settings[ "start_tempo" ])
                     if (os.environ.get( "OS", "xbox" ) == "xbox"):
                         xbmc.executebuiltin('XBMC.Runxbe(' + launcher["application"] + ')')
@@ -1582,7 +1585,10 @@ class Main:
                     xbmc.sleep(self.settings[ "start_tempo" ])
                     if (launcher["minimize"] == "true"):
                         _toogle_fullscreen()
-                    xbmc.enableNavSounds(True)                            
+                    try:
+                        xbmc.enableNavSounds(True)                            
+                    except:
+                        pass
                     if ( self.settings[ "media_state" ] != "2" ):
                         try:
                             xbmc.audioResume()
@@ -1749,7 +1755,10 @@ class Main:
                                 _toogle_fullscreen()
                             if ( self.settings[ "launcher_notification" ] ):
                                 xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30034 ) % rom["name"]))
-                            xbmc.enableNavSounds(False)                                 
+                            try:
+                                xbmc.enableNavSounds(False)                                 
+                            except:
+                                pass
                             xbmc.sleep(self.settings[ "start_tempo" ])
                             if (os.environ.get( "OS", "xbox" ) == "xbox"):
                                 f=open(SHORTCUT_FILE, "wb")
@@ -1788,7 +1797,12 @@ class Main:
                                 else:
                                     xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 )+" - "+__language__( 30612 ), __language__( 30609 )))
                             xbmc.sleep(self.settings[ "start_tempo" ])
-                            xbmc.enableNavSounds(True)                            
+                            try:
+                                xbmc.enableNavSounds(True)                            
+                            except:
+                                pass
+                            if (launcher["minimize"] == "true"):
+                                _toogle_fullscreen()
                             if ( self.settings[ "media_state" ] != "2" ):
                                 try:
                                     xbmc.audioResume()
@@ -1826,12 +1840,6 @@ class Main:
 
     def _save_launchers (self):
         xbmc.executebuiltin( "ActivateWindow(busydialog)" )
-        print len(self.categories)
-        print len(self.launchers)
-        #self.categories.pop()
-        #self.launchers.pop()
-        print len(self.categories)
-        print len(self.launchers)
         # make settings directory if doesn't exists
         if (not os.path.isdir(os.path.dirname(TEMP_CURRENT_SOURCE_PATH))):
             os.makedirs(os.path.dirname(TEMP_CURRENT_SOURCE_PATH))
@@ -2184,7 +2192,7 @@ class Main:
                         defined_fanart = selectedLauncher["fanart"]
                     else:
                         defined_fanart = roms[key]["fanart"]
-                    self._add_rom(launcherID, roms[key]["name"], roms[key]["filename"], roms[key]["gamesys"], roms[key]["thumb"], defined_fanart, roms[key]["trailer"], roms[key]["custom"], roms[key]["genre"], roms[key]["release"], roms[key]["studio"], roms[key]["plot"], roms[key]["finished"], roms[key]["altapp"], roms[key]["altarg"], len(roms), key)
+                    self._add_rom(launcherID, roms[key]["name"], roms[key]["filename"], roms[key]["gamesys"], roms[key]["thumb"], defined_fanart, roms[key]["trailer"], roms[key]["custom"], roms[key]["genre"], roms[key]["release"], roms[key]["studio"], roms[key]["plot"], roms[key]["finished"], roms[key]["altapp"], roms[key]["altarg"], len(roms), key, False, "")
                 xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )
             else:
                 xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 ), __language__( 30349 )))
@@ -2561,7 +2569,7 @@ class Main:
                         romsCount = romsCount + 1
 
                         if (addRoms):
-                            self._add_rom(launcherID, romdata["name"], romdata["filename"], romdata["gamesys"], romdata["thumb"], romdata["fanart"], romdata["trailer"], romdata["custom"], romdata["genre"], romdata["release"], romdata["studio"], romdata["plot"], romdata["finished"], romdata["altapp"], romdata["altarg"], len(files), key)
+                            self._add_rom(launcherID, romdata["name"], romdata["filename"], romdata["gamesys"], romdata["thumb"], romdata["fanart"], romdata["trailer"], romdata["custom"], romdata["genre"], romdata["release"], romdata["studio"], romdata["plot"], romdata["finished"], romdata["altapp"], romdata["altarg"], len(files), key, False, "")
                             romadded = True
             if not romadded:
                 self._print_log(__language__( 30731 )) 
@@ -2638,7 +2646,7 @@ class Main:
             else:
                 xbmcplugin.addDirectoryItem( handle=int( self._handle ), url="%s?%s/%s"  % (self._path, category, key), listitem=listitem, isFolder=False)
 
-    def _add_rom( self, launcherID, name, cmd , romgamesys, thumb, romfanart, romtrailer, romcustom, romgenre, romrelease, romstudio, romplot, finished, altapp, altarg, total, key):
+    def _add_rom( self, launcherID, name, cmd , romgamesys, thumb, romfanart, romtrailer, romcustom, romgenre, romrelease, romstudio, romplot, finished, altapp, altarg, total, key, search, search_url):
         if (int(xbmc.getInfoLabel("System.BuildVersion")[0:2]) < 12 ):
             # Dharma / Eden compatible
             display_date_format = "Date"
@@ -2659,8 +2667,11 @@ class Main:
         listitem.setInfo( "video", { "Title": name, "Label": os.path.basename(cmd), "Plot" : romplot, "Studio" : romstudio, "Genre" : romgenre, "Premiered" : romrelease  , display_date_format : romrelease, "Writer" : romgamesys, "Trailer" : os.path.join(romtrailer), "Director" : os.path.join(romcustom), "overlay": ICON_OVERLAY } )
 
         commands = []
-        commands.append((__language__( 30512 ), "XBMC.RunPlugin(%s?%s/%s/%s)"    % (self._path, self.launchers[launcherID]["category"], launcherID, SEARCH_COMMAND) , ))
+        commands.append((__language__( 30512 ), "XBMC.RunPlugin(%s?%s/%s/%s)" % (self._path, self.launchers[launcherID]["category"], launcherID, SEARCH_COMMAND) , ))
         commands.append(( __language__( 30107 ), "XBMC.RunPlugin(%s?%s/%s/%s/%s)" % (self._path, self.launchers[launcherID]["category"], launcherID, key, EDIT_COMMAND) , ))
+        if search :
+            print search_url
+            commands.append((__language__( 30513 ), "XBMC.RunPlugin(%s?%s/%s/%s)" % (self._path, self.launchers[launcherID]["category"], launcherID, SEARCH_COMMAND) , ))
         listitem.addContextMenuItems( commands )
         if ( finished == "false" ) or ( self.settings[ "hide_finished" ] == False) :
             xbmcplugin.addDirectoryItem( handle=int( self._handle ), url="%s?%s/%s/%s"  % (self._path, self.launchers[launcherID]["category"], launcherID, key), listitem=listitem, isFolder=False)
@@ -3155,6 +3166,17 @@ def _search_category(self,category):
 
 def _find_category_roms( self, search, category ):
     #sorted by name
+    if category == 'name' : 
+        s_cmd = SEARCH_ITEM_COMMAND
+    if category == 'release' :
+        s_cmd = SEARCH_DATE_COMMAND
+    if category == 'gamesys' :
+        s_cmd = SEARCH_PLATFORM_COMMAND
+    if category == 'studio' :
+        s_cmd = SEARCH_STUDIO_COMMAND
+    if category == 'genre' :
+        s_cmd = SEARCH_GENRE_COMMAND
+    s_url = 'plugin://plugin.program.advanced.launcher/?'+search+'/'+s_cmd
     if (len(self.launchers) > 0):
         rl = {}
         for launcherID in sorted(self.launchers.iterkeys()):
@@ -3180,5 +3202,5 @@ def _find_category_roms( self, search, category ):
                             rl[keyr]["launcherID"] = launcherID
     #print the list sorted
     for key in sorted(rl.iterkeys()):
-        self._add_rom(rl[key]["launcherID"], rl[key]["name"], rl[key]["filename"], rl[key]["gamesys"], rl[key]["thumb"], rl[key]["fanart"], rl[key]["trailer"], rl[key]["custom"], rl[key]["genre"], rl[key]["release"], rl[key]["studio"], rl[key]["plot"], rl[key]["finished"], rl[key]["altapp"], rl[key]["altarg"], len(rl), key)
+        self._add_rom(rl[key]["launcherID"], rl[key]["name"], rl[key]["filename"], rl[key]["gamesys"], rl[key]["thumb"], rl[key]["fanart"], rl[key]["trailer"], rl[key]["custom"], rl[key]["genre"], rl[key]["release"], rl[key]["studio"], rl[key]["plot"], rl[key]["finished"], rl[key]["altapp"], rl[key]["altarg"], len(rl), key, True, s_url)
     xbmcplugin.endOfDirectory( handle=int( self._handle ), succeeded=True, cacheToDisc=False )

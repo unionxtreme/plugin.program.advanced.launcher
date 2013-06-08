@@ -2,7 +2,7 @@
 
 import re
 import os
-import urllib
+import urllib2
 from xbmcaddon import Addon
 
 # Return Game search list
@@ -10,7 +10,9 @@ def _get_games_list(search):
     display=[]
     results=[]
     try:
-        f = urllib.urlopen('http://www.gamefaqs.com/search/index.html?platform=0&game='+search.replace(' ','+')+'')
+        req = urllib2.Request('http://www.gamefaqs.com/search/index.html?platform=0&game='+search.replace(' ','+')+'')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         gets = {}
         gets = re.findall('                                <a href="(.*?)"                                >(.*?)</a></td>', f.read().replace('\r\n', ''))
         for get in gets:
@@ -30,7 +32,9 @@ def _get_first_game(search,gamesys):
     platform = _system_conversion(gamesys)
     results = []
     try:
-        f = urllib.urlopen('http://www.gamefaqs.com/search/index.html?platform='+platform+'&game='+search.replace(' ','+')+'')
+        req = urllib2.Request('http://www.gamefaqs.com/search/index.html?platform='+platform+'&game='+search.replace(' ','+')+'')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         gets = {}
         gets = re.findall('                                <a href="(.*?)"                                >(.*?)</a></td>', f.read().replace('\r\n', ''))
         for get in gets:
@@ -52,7 +56,9 @@ def _get_game_data(game_url):
     gamedata["studio"] = ""
     gamedata["plot"] = ""
     try:
-        f = urllib.urlopen(game_url)
+        req = urllib2.Request(game_url)
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         page = f.read().replace('\r\n', '')
         game_genre = re.findall('</a> &raquo; <a href="(.*?)">(.*?)</a> &raquo; <a href="/', page)
         if game_genre:

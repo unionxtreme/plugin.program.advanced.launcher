@@ -2,7 +2,7 @@
 
 import os
 import re
-import urllib
+import urllib2
 from xbmcaddon import Addon
 
 # Get Game first page
@@ -11,7 +11,9 @@ def _get_game_page_url(system,search):
     game = search.replace(' ', '+').lower()
     games = []
     try:
-        search_page = urllib.urlopen('http://www.gamefaqs.com/search/index.html?platform='+platform+'&game='+game+'&s=s')
+        req = urllib2.Request('http://www.gamefaqs.com/search/index.html?platform='+platform+'&game='+game+'&s=s')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        search_page = urllib2.urlopen(req)
         for line in search_page.readlines():
             if '>Pics</a></td>' in line:
                 games.append(re.findall('<a href=[^"]*"(.*?)">Pics</a></td>', line.replace('\r\n', '')))
@@ -25,7 +27,9 @@ def _get_fanarts_list(system,search,imgsize):
     full_fanarts = []
     game_id_url = _get_game_page_url(system,search)
     try:
-        game_page = urllib.urlopen('http://www.gamefaqs.com'+game_id_url+'?page=0')
+        req = urllib2.Request('http://www.gamefaqs.com'+game_id_url+'?page=0')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        game_page = urllib2.urlopen(req)
         if game_page:
             for line in game_page.readlines():
                 if 'pod game_imgs' in line:
@@ -40,7 +44,9 @@ def _get_fanarts_list(system,search,imgsize):
 def _get_fanart(image_url):
     images = []
     try:
-        search_page = urllib.urlopen('http://www.gamefaqs.com' + image_url)
+        req = urllib2.Request('http://www.gamefaqs.com' + image_url)
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        search_page = urllib2.urlopen(req)
         for line in search_page.readlines():
             if 'pod game_imgs' in line:
                 images = re.findall('g"><a href="(.*?)"', line)
