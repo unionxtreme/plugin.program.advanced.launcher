@@ -2,20 +2,22 @@
 
 import os
 import re
-import urllib
+import urllib2
 from xbmcaddon import Addon
 
 # Get Game page
 def _get_game_page_url(system,search):
     platform = _system_conversion(system)
-    params = urllib.urlencode({"name": search, "platform": platform})
     results = []
     try:
-        f = urllib.urlopen("http://thegamesdb.net/api/GetGamesList.php", params)
+        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"&plateform="'+platform+'"')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         page = f.read().replace("\n", "")
         if (platform == "Sega Genesis" ) :
-            params = urllib.urlencode({"name": search, "platform": "Sega Mega Drive"})
-            f2 = urllib.urlopen("http://thegamesdb.net/api/GetGamesList.php", params)
+            req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"&plateform="Sega Mega Drive"')
+            req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+            f2 = urllib2.urlopen(req)
             page = page + f2.read().replace("\n", "")
         games = re.findall("<Game><id>(.*?)</id><GameTitle>(.*?)</GameTitle>(.*?)<Platform>(.*?)</Platform></Game>", page)
         for item in games:
@@ -39,7 +41,9 @@ def _get_fanarts_list(system,search,imgsize):
     full_fanarts = []
     game_id_url = _get_game_page_url(system,search)
     try:
-        f = urllib.urlopen(game_id_url)
+        req = urllib2.Request(game_id_url)
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         page = f.read().replace('\n', '')
         fanarts = re.findall('<original (.*?)">fanart/(.*?)</original>', page)
         for indexa, fanart in enumerate(fanarts):

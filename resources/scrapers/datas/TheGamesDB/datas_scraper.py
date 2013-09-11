@@ -2,17 +2,19 @@
 
 import re
 import os
-import urllib
+import urllib2
+
 from xbmcaddon import Addon
 from operator import itemgetter, attrgetter
 
 # Return Game search list
 def _get_games_list(search):
-    params = urllib.urlencode({"name": search})
     results = []
     display = []
     try:
-        f = urllib.urlopen("http://thegamesdb.net/api/GetGamesList.php", params)
+        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         page = f.read().replace("\n", "")
         games = re.findall("<Game><id>(.*?)</id><GameTitle>(.*?)</GameTitle>(.*?)<Platform>(.*?)</Platform></Game>", page)
         for item in games:
@@ -26,6 +28,7 @@ def _get_games_list(search):
             if ( game["title"].lower().find(search.lower()) != -1 ):
                 game["order"] += 1
             results.append(game)
+            print game
         results.sort(key=lambda result: result["order"], reverse=True)
         for result in results:
             display.append(result["title"]+" / "+result["gamesys"])
@@ -36,16 +39,17 @@ def _get_games_list(search):
 # Return 1st Game search
 def _get_first_game(search,gamesys):
     platform = _system_conversion(gamesys)
-    params = urllib.urlencode({"name": search, "platform": platform})
-    print params
     results = []
     try:
-        f = urllib.urlopen("http://thegamesdb.net/api/GetGamesList.php", params)
+        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"&plateform="'+platform+'"')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         page = f.read().replace("\n", "")
         if (platform == "Sega Genesis" ) :
-           params = urllib.urlencode({"name": search, "platform": "Sega Mega Drive"})
-           f2 = urllib.urlopen("http://thegamesdb.net/api/GetGamesList.php", params)
-           page = page + f2.read().replace("\n", "")
+            req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"&plateform="Sega Mega Drive"')
+            req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+            f2 = urllib2.urlopen(req)
+            page = page + f2.read().replace("\n", "")
         games = re.findall("<Game><id>(.*?)</id><GameTitle>(.*?)</GameTitle>(.*?)<Platform>(.*?)</Platform></Game>", page)
         for item in games:
             game = {}
@@ -71,7 +75,9 @@ def _get_game_data(game_url):
     gamedata["studio"] = ""
     gamedata["plot"] = ""
     try:
-        f = urllib.urlopen(game_url)
+        req = urllib2.Request(game_url)
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+        f = urllib2.urlopen(req)
         page = f.read().replace('\n', '')
         game_genre = ' / '.join(re.findall('<genre>(.*?)</genre>', page))
         if game_genre:

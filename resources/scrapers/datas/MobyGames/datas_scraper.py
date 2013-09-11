@@ -2,7 +2,7 @@
 
 import re
 import os
-import urllib
+import urllib,urllib2
 from xbmcaddon import Addon
 
 # Return Game search list
@@ -10,7 +10,8 @@ def _get_games_list(search):
     results = []
     display = []
     try:
-        f = urllib.urlopen('http://www.mobygames.com/search/quick?q='+search.replace(' ','+')+'&sFilter=1&sG=on')
+        f = urllib2.urlopen('http://www.mobygames.com/search/quick?q='+search.replace(' ','+')+'&sFilter=1&sG=on')
+        req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
         for line in f.readlines():
             if 'searchNumber' in line:
                 split_games = re.findall('Game: (.*?)</span></div>', line)

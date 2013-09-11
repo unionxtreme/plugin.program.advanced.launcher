@@ -1,3 +1,7 @@
+[B]2.0.11[/B]
+. Fix TheGameDB scrapers (info, thumbs and fanarts).
+. Change download image runtime.
+
 [B]2.0.10[/B]
 . Fix GameFAQs scrapers (info, thumbs and fanarts).
 . Fix post-Frodo XBMC versions compatibility.

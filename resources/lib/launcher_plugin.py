@@ -24,7 +24,7 @@ import xbmcplugin
 import time, datetime
 import math
 import re
-import urllib
+import urllib, urllib2
 import subprocess_hack
 import xml.dom.minidom
 import socket
@@ -578,7 +578,13 @@ class Main:
                                     file_path = os.path.join(os.path.dirname(self.launchers[launcher]["thumbpath"]),os.path.basename(filename.replace("."+filename.split(".")[-1], img_ext)))
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000)" % (__language__( 30000 ), __language__( 30069 )))
                             try:
-                                h = urllib.urlretrieve(img_url,file_path)
+                                download_img(img_url,file_path)
+                                req = urllib2.Request(img_url)
+                                req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+                                f = open(file_path,'wb')
+                                f.write(urllib2.urlopen(req).read())
+                                f.close()                                
+
                                 self.launchers[launcher]["roms"][rom]["thumb"] = file_path
                                 self._save_launchers()
                                 _update_cache(file_path)
@@ -627,7 +633,7 @@ class Main:
                                 file_path = os.path.join(self.settings[ "launcher_thumb_path" ],os.path.basename(self.launchers[launcherID]["application"])+'_thumb'+img_ext)
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000" % (__language__( 30000 ), __language__( 30069 )))
                             try:
-                                h = urllib.urlretrieve(img_url,file_path)
+                                download_img(img_url,file_path)
                                 self.launchers[launcherID]["thumb"] = file_path
                                 self._save_launchers()
                                 _update_cache(file_path)
@@ -659,7 +665,7 @@ class Main:
                             file_path = os.path.join(DEFAULT_THUMB_PATH,os.path.basename(self.categories[categoryID]["name"])+'_thumb'+img_ext)
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000" % (__language__( 30000 ), __language__( 30069 )))
                             try:
-                                h = urllib.urlretrieve(img_url,file_path)
+                                download_img(img_url,file_path)
                                 self.categories[categoryID]["thumb"] = file_path
                                 self._save_launchers()
                                 _update_cache(file_path)
@@ -714,7 +720,7 @@ class Main:
                                     file_path = os.path.join(os.path.dirname(self.launchers[launcher]["fanartpath"]),os.path.basename(filename.replace("."+filename.split(".")[-1], img_ext)))
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000)" % (__language__( 30000 ), __language__( 30074 )))
                             try:
-                                h = urllib.urlretrieve(img_url,file_path)
+                                download_img(img_url,file_path)
                                 self.launchers[launcher]["roms"][rom]["fanart"] = file_path
                                 self._save_launchers()
                                 _update_cache(file_path)
@@ -746,7 +752,7 @@ class Main:
                             file_path = os.path.join(DEFAULT_FANART_PATH,os.path.basename(self.categories[categoryID]["name"])+'_fanart'+img_ext)
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000" % (__language__( 30000 ), __language__( 30074 )))
                             try:
-                                h = urllib.urlretrieve(img_url,file_path)
+                                download_img(img_url,file_path)
                                 self.categories[categoryID]["fanart"] = file_path
                                 self._save_launchers()
                                 _update_cache(file_path)
@@ -796,7 +802,7 @@ class Main:
                                 file_path = os.path.join(self.settings[ "launcher_fanart_path" ],os.path.basename(self.launchers[launcherID]["application"])+'_fanart'+img_ext)
                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 300000)" % (__language__( 30000 ), __language__( 30074 )))
                             try:
-                                h = urllib.urlretrieve(img_url,file_path)
+                                download_img(img_url,file_path)
                                 self.launchers[launcherID]["fanart"] = file_path
                                 self._save_launchers()
                                 _update_cache(file_path)
@@ -2491,7 +2497,7 @@ class Main:
                                     cached_thumb = thumbnails.get_cached_covers_thumb( thumb ).replace("tbn" , "jpg")
                                     if ( img_url !='' ):
                                         try:
-                                            h = urllib.urlretrieve(img_url,thumb)
+                                            download_img(img_url,file_thumb)
                                             shutil.copy2( thumb.decode(sys.getfilesystemencoding(),'ignore') , cached_thumb.decode(sys.getfilesystemencoding(),'ignore') )
                                         except socket.timeout:
                                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 )+" - "+__language__( 30612 ), __language__( 30604 )))
@@ -2546,7 +2552,11 @@ class Main:
                                     cached_thumb = thumbnails.get_cached_covers_thumb( fanart ).replace("tbn" , "jpg")
                                     if ( img_url !='' ):
                                         try:
-                                            h = urllib.urlretrieve(img_url,fanart)
+                                            download_img(img_url,fanart)
+                                            opener = FancyURLopener({}) 
+                                            opener.version = 'Mozilla/5.0'
+                                            opener.retrieve(img_url,fanart)
+                                            
                                             shutil.copy2( fanart.decode(sys.getfilesystemencoding(),'ignore') , cached_thumb.decode(sys.getfilesystemencoding(),'ignore') )
                                         except socket.timeout:
                                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 )+" - "+__language__( 30612 ), __language__( 30606 )))
@@ -3097,6 +3107,13 @@ def title_format(self,title):
         if (title.endswith(", A")): new_title = "A "+"".join(title.rsplit(", A",1))
         if (title.endswith(", An")): new_title = "An "+"".join(title.rsplit(", An",1))
     return new_title
+
+def download_img(img_url,file_path):
+    req = urllib2.Request(img_url)
+    req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+    f = open(file_path,'wb')
+    f.write(urllib2.urlopen(req).read())
+    f.close()                                
 
 def clean_filename(title):
     title = re.sub('\[.*?\]', '', title)
