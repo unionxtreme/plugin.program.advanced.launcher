@@ -35,6 +35,7 @@ from traceback import print_exc
 from operator import itemgetter
 
 import shutil
+from user_agent import getUserAgent
 from file_item import Thumbnails
 thumbnails = Thumbnails()
 
@@ -2497,7 +2498,7 @@ class Main:
                                     cached_thumb = thumbnails.get_cached_covers_thumb( thumb ).replace("tbn" , "jpg")
                                     if ( img_url !='' ):
                                         try:
-                                            download_img(img_url,file_thumb)
+                                            download_img(img_url,thumb)
                                             shutil.copy2( thumb.decode(sys.getfilesystemencoding(),'ignore') , cached_thumb.decode(sys.getfilesystemencoding(),'ignore') )
                                         except socket.timeout:
                                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 )+" - "+__language__( 30612 ), __language__( 30604 )))
@@ -2553,10 +2554,6 @@ class Main:
                                     if ( img_url !='' ):
                                         try:
                                             download_img(img_url,fanart)
-                                            opener = FancyURLopener({}) 
-                                            opener.version = 'Mozilla/5.0'
-                                            opener.retrieve(img_url,fanart)
-                                            
                                             shutil.copy2( fanart.decode(sys.getfilesystemencoding(),'ignore') , cached_thumb.decode(sys.getfilesystemencoding(),'ignore') )
                                         except socket.timeout:
                                             xbmc.executebuiltin("XBMC.Notification(%s,%s, 3000)" % (__language__( 30000 )+" - "+__language__( 30612 ), __language__( 30606 )))
@@ -3110,10 +3107,15 @@ def title_format(self,title):
 
 def download_img(img_url,file_path):
     req = urllib2.Request(img_url)
-    req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
+    req.add_unredirected_header('User-Agent', getUserAgent())
     f = open(file_path,'wb')
     f.write(urllib2.urlopen(req).read())
     f.close()                                
+
+def download_page(url):
+    req = urllib2.Request(url)
+    req.add_unredirected_header('User-Agent', getUserAgent())
+    return urllib2.urlopen(req)
 
 def clean_filename(title):
     title = re.sub('\[.*?\]', '', title)

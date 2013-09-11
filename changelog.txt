@@ -1,3 +1,7 @@
+[B]2.0.12[/B]
+. Fix images download bug into automatic scan mode.
+. Improve download image algorithm.
+
 [B]2.0.11[/B]
 . Fix TheGameDB scrapers (info, thumbs and fanarts).
 . Change download image runtime.
