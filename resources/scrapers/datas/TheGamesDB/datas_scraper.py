@@ -2,7 +2,7 @@
 
 import re
 import os
-import urllib2
+import urllib, urllib2
 
 from xbmcaddon import Addon
 from operator import itemgetter, attrgetter
@@ -12,7 +12,7 @@ def _get_games_list(search):
     results = []
     display = []
     try:
-        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"')
+        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name='+urllib.quote_plus(search))
         req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
         f = urllib2.urlopen(req)
         page = f.read().replace("\n", "")
@@ -41,12 +41,12 @@ def _get_first_game(search,gamesys):
     platform = _system_conversion(gamesys)
     results = []
     try:
-        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"&plateform="'+platform+'"')
+        req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name='+urllib.quote_plus(search)+'&platform='+urllib.quote_plus(platform))
         req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
         f = urllib2.urlopen(req)
         page = f.read().replace("\n", "")
         if (platform == "Sega Genesis" ) :
-            req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name="'+search+'"&plateform="Sega Mega Drive"')
+            req = urllib2.Request('http://thegamesdb.net/api/GetGamesList.php?name='+urllib.quote_plus(search)+'&platform='+urllib.quote_plus('Sega Mega Drive'))
             req.add_unredirected_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31')
             f2 = urllib2.urlopen(req)
             page = page + f2.read().replace("\n", "")
