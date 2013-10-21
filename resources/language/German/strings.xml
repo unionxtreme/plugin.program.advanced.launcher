@@ -79,7 +79,7 @@
     <string id="30121">Quelle</string>
     <string id="30122">Vorschaubilder</string>
     <string id="30123">Fanbilder</string>
-    <string id="30124">Erweiterte Optionen</string>
+    <string id="30124">Sonstiges</string>
     <string id="30125">Für Vorschaubilder</string>
     <string id="30126">Daten &amp; Infos</string>
     <string id="30127">Für Fanbilder</string>
@@ -134,13 +134,13 @@
     <string id="30180">Verzögerung beim Programmstart (ms)</string>
     <string id="30181">Einstellungen für Sicherungen</string>
     <string id="30182">Aktiviere automatische Sicherung</string>
-    <string id="30183">Erweitert</string>
+    <string id="30183">Erweiterte Optionen</string>
     <string id="30184">Anzahl der Sicherungen</string>
     <string id="30185">Importiere XML Datei (Sicherung wiederherstellen)</string>
     <string id="30186">Wähle zu importierende XML Datei</string>
-    <string id="30187">Advanced Launcher Meldungen in die xbmc.log Datei</string>
-    <string id="30188">Abzeigeoptionen</string>
-    <string id="30189">Verstecke die Standard Kategorie</string>
+    <string id="30187">Advanced Launcher Meldungen in die xbmc.log Datei schreiben</string>
+    <string id="30188">Anzeigeoptionen</string>
+    <string id="30189">Verstecke Standard Kategorie</string>
     <string id="30190">Füge XML Datei an (verbinde Programmstarterlisten)</string>
     <string id="30191">Wähle XML Datei zum anhängen</string>
     <string id="30192">Zusammenlegung</string>
