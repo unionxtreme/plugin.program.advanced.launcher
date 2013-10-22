@@ -32,10 +32,10 @@
     <string id="30051">Quellen verwalten</string>
     <string id="30052">Parameter bearbeiten</string>
     <string id="30054">Dateierweiterungen bearbeiten, benutze &quot;|&quot; als Trennsymbol. (z.B. lnk|cbr)</string>
-    <string id="30058">Verzeichnis zu den Dateien</string>
+    <string id="30058">Verzeichnis zu den .nfo Dateien</string>
     <string id="30059">Verzeichnis zu den Vorschaubildern</string>
     <string id="30060">Verzeichnis zu den Fanbildern</string>
-    <string id="30057">Verzeichnis zur Personalisierung</string>
+    <string id="30057">Verzeichnis zu den extra Fanbildern</string>
     <string id="30090">Wähle Trailer Datei</string>
 
     <string id="30061">%s Informationen aus %s importieren</string>
@@ -158,7 +158,7 @@
     <string id="30301">Informationen bearbeiten</string>
     <string id="30302">Vorschaubild wechseln</string>
     <string id="30303">Fanbild wechseln</string>
-    <string id="30304">Kategorie löschen</string>
+    <string id="30304">Eintrag löschen</string>
     <string id="30305">Eintrag bearbeiten</string>
     <string id="30306">Titel: %s</string>
     <string id="30307">Platform: %s</string>
@@ -180,12 +180,12 @@
     <string id="30321">Aus %s (%s) importieren</string>
     <string id="30322">Importiere aus %s: %s Größe</string>
     <string id="30323">Erweiterte Einstellungen</string>
-    <string id="30324">Verzeichnis zu den Dateien: %s</string>
+    <string id="30324">Verzeichnis zu den .nfo Dateien: %s</string>
     <string id="30325">Verzeichnis zu den Vorschaubildern: %s</string>
     <string id="30326">Verzeichnis zu den Fanbildern: %s</string>
     <string id="30327">Anwendung: %s</string>
     <string id="30330">Verknüpfungen (.lnk) unterstützen: %s</string>
-    <string id="30331">Verzeichnis zur Personalisierung: %s</string>
+    <string id="30331">Verzeichnis zu den extra Fanbildern: %s</string>
     <string id="30332">Lokales Bild importieren (Kopieren und Umbenennen)</string>
     <string id="30334">Dateien verwalten</string>
     <string id="30335">Daten aus .nfo Dateien importieren</string>
