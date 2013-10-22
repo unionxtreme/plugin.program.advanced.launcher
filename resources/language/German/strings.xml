@@ -70,7 +70,7 @@
     <string id="30107">Bearbeiten</string>
     <string id="30109">Programmstarter bearbeiten</string>
     <string id="30110">Kategorie bearbeiten</string>
-    <string id="30111">Neue Kategorie erstellen</string>
+    <string id="30111">Kategorie erstellen</string>
     <string id="30112">Neuer Kategoriename</string>
     <string id="30113">Kategorie %s erstellt</string>
     <string id="30114">Kategorie wählen</string>
@@ -145,7 +145,7 @@
     <string id="30191">Wähle XML Datei zum anhängen</string>
     <string id="30192">Zusammenlegung</string>
     <string id="30193">Startoptionen für Programmstarter</string>
-    <string id="30194">Neuen Programmstarter hinzufügen</string>
+    <string id="30194">Programmstarter hinzufügen</string>
 
     <string id="30201">standard</string>
     <string id="30202">erfahrene Anwender</string>
@@ -158,7 +158,7 @@
     <string id="30301">Informationen bearbeiten</string>
     <string id="30302">Vorschaubild wechseln</string>
     <string id="30303">Fanbild wechseln</string>
-    <string id="30304">Löschen</string>
+    <string id="30304">Kategorie löschen</string>
     <string id="30305">Eintrag bearbeiten</string>
     <string id="30306">Titel: %s</string>
     <string id="30307">Platform: %s</string>
@@ -219,7 +219,7 @@
     <string id="30501">Check for dead entries in %s...</string>
     <string id="30502">%s entries removed successfully</string>
     <string id="30503">not found</string>
-    <string id="30512">Suche</string>
+    <string id="30512">Einträge suchen</string>
     <string id="30513">Ergebnis zu den Favoriten hinzufügen</string>
 
     <string id="30600">Die Sicherungsdatei kann nicht erstellt werden.</string>
