@@ -1,3 +1,10 @@
+[B]2.0.15[/B]
+. Update German translation (thanks to mbroemme).
+
+[B]2.0.14[/B]
+. Fix GameFAQs scrapers (gamesystem list update).
+. Remove MobyGames scraper (until it will work correctly).
+
 [B]2.0.13[/B]
 . Fix TheGameDB scrapers (info, thumbs and fanarts).
 
