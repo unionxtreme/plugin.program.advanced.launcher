@@ -1880,7 +1880,7 @@ class Main:
         try:
             usock = open( TEMP_CURRENT_SOURCE_PATH, 'w' )
             usock.write("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n")
-            usock.write("<advanced launcher version=\"1.0\">\n")
+            usock.write("<advanced_launcher version=\"1.0\">\n")
             # Create Categories XML list
             usock.write("\t<categories>\n")
             for categoryIndex in sorted(self.categories, key= lambda x : self.categories[x]["name"]):
@@ -1943,7 +1943,7 @@ class Main:
                 usock.write("\t\t\t</roms>\n")
                 usock.write("\t\t</launcher>\n")
             usock.write("\t</launchers>\n")
-            usock.write("</advanced launcher>")
+            usock.write("</advanced_launcher>")
             usock.close()
             try:
                 shutil.copy2(TEMP_CURRENT_SOURCE_PATH, BASE_CURRENT_SOURCE_PATH)
