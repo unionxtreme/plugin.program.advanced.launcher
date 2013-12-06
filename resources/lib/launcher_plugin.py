@@ -87,6 +87,7 @@ SEARCH_DATE_COMMAND = "%%SEARCH_DATE%%"
 SEARCH_PLATFORM_COMMAND = "%%SEARCH_PLATFORM%%"
 SEARCH_STUDIO_COMMAND = "%%SEARCH_STUDIO%%"
 SEARCH_GENRE_COMMAND = "%%SEARCH_GENRE%%"
+SCAN_NEW_ITEM_COMMAND = "%%SCAN_NEW_ITEM%%"
 
 class Main:
     BASE_CACHE_PATH = xbmc.translatePath(os.path.join( "special://profile/Thumbnails", "Pictures" ))
@@ -109,6 +110,7 @@ class Main:
                 /category/launcher/%%GET_THUMB%% - get launcher thumb from configured scraper
                 /category/launcher/%%GET_FANART%% - get launcher fanart from configured scraper
                 /category/launcher/%%REMOVE%% - remove the launcher
+                /category/launcher/%%SCAN_NEW_ITEM%% - scan launcher folder for new item
 
                 /category/launcher/%%ADD%% - add a new rom (open wizard)
                 /category/launcher/rom - run the specifiec rom using it's launcher. ignore command if doesn't exists.
@@ -192,6 +194,8 @@ class Main:
                     self._scrap_thumb_launcher(launcher)
                 elif (rom == GET_FANART):
                     self._scrap_fanart_launcher(launcher)
+                elif (category == SCAN_NEW_ITEM_COMMAND):
+					self._import_roms(launcher, addRoms = False)
                 elif (rom == ADD_COMMAND):
                     self._add_roms(launcher)
                 else:
@@ -240,6 +244,10 @@ class Main:
                 category = command_part[0]
                 self._print_log(__language__( 30740 ) % category)
 
+                if (category == SCAN_NEW_ITEM_COMMAND):
+					print self._path
+					print self._handle
+					self._find_roms()
                 if (category == SEARCH_COMMAND):
                     self._find_roms()
                 elif (category == FILE_MANAGER_COMMAND):
@@ -1872,68 +1880,70 @@ class Main:
         try:
             usock = open( TEMP_CURRENT_SOURCE_PATH, 'w' )
             usock.write("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n")
+            usock.write("<advanced launcher version=\"1.0\">\n")
             # Create Categories XML list
-            usock.write("<categories>\n")
+            usock.write("\t<categories>\n")
             for categoryIndex in sorted(self.categories, key= lambda x : self.categories[x]["name"]):
                 category = self.categories[categoryIndex]
-                usock.write("\t<category>\n")
-                usock.write("\t\t<id>"+categoryIndex+"</id>\n")
-                usock.write("\t\t<name>"+category["name"]+"</name>\n")
-                usock.write("\t\t<thumb>"+category["thumb"]+"</thumb>\n")
-                usock.write("\t\t<fanart>"+category["fanart"]+"</fanart>\n")
-                usock.write("\t\t<genre>"+category["genre"]+"</genre>\n")
-                usock.write("\t\t<description>"+category["plot"]+"</description>\n")
-                usock.write("\t</category>\n")
-            usock.write("</categories>\n")
+                usock.write("\t\t<category>\n")
+                usock.write("\t\t\t<id>"+categoryIndex+"</id>\n")
+                usock.write("\t\t\t<name>"+category["name"]+"</name>\n")
+                usock.write("\t\t\t<thumb>"+category["thumb"]+"</thumb>\n")
+                usock.write("\t\t\t<fanart>"+category["fanart"]+"</fanart>\n")
+                usock.write("\t\t\t<genre>"+category["genre"]+"</genre>\n")
+                usock.write("\t\t\t<description>"+category["plot"]+"</description>\n")
+                usock.write("\t\t</category>\n")
+            usock.write("\t</categories>\n")
             # Create Launchers XML list
-            usock.write("<launchers>\n")
+            usock.write("\t<launchers>\n")
             for launcherIndex in sorted(self.launchers, key= lambda x : self.launchers[x]["name"]):
                 launcher = self.launchers[launcherIndex]
-                usock.write("\t<launcher>\n")
-                usock.write("\t\t<id>"+launcherIndex+"</id>\n")
-                usock.write("\t\t<name>"+launcher["name"]+"</name>\n")
-                usock.write("\t\t<category>"+launcher["category"]+"</category>\n")
-                usock.write("\t\t<application>"+launcher["application"]+"</application>\n")
-                usock.write("\t\t<args>"+launcher["args"]+"</args>\n")
-                usock.write("\t\t<rompath>"+launcher["rompath"]+"</rompath>\n")
-                usock.write("\t\t<thumbpath>"+launcher["thumbpath"]+"</thumbpath>\n")
-                usock.write("\t\t<fanartpath>"+launcher["fanartpath"]+"</fanartpath>\n")
-                usock.write("\t\t<trailerpath>"+launcher["trailerpath"]+"</trailerpath>\n")
-                usock.write("\t\t<custompath>"+launcher["custompath"]+"</custompath>\n")
-                usock.write("\t\t<romext>"+launcher["romext"]+"</romext>\n")
-                usock.write("\t\t<platform>"+launcher["gamesys"]+"</platform>\n")
-                usock.write("\t\t<thumb>"+launcher["thumb"]+"</thumb>\n")
-                usock.write("\t\t<fanart>"+launcher["fanart"]+"</fanart>\n")
-                usock.write("\t\t<genre>"+launcher["genre"]+"</genre>\n")
-                usock.write("\t\t<release>"+launcher["release"]+"</release>\n")
-                usock.write("\t\t<publisher>"+launcher["studio"]+"</publisher>\n")
-                usock.write("\t\t<launcherplot>"+launcher["plot"]+"</launcherplot>\n")
-                usock.write("\t\t<finished>"+launcher["finished"]+"</finished>\n")
-                usock.write("\t\t<minimize>"+launcher["minimize"]+"</minimize>\n")
-                usock.write("\t\t<lnk>"+launcher["lnk"]+"</lnk>\n")
+                usock.write("\t\t<launcher>\n")
+                usock.write("\t\t\t<id>"+launcherIndex+"</id>\n")
+                usock.write("\t\t\t<name>"+launcher["name"]+"</name>\n")
+                usock.write("\t\t\t<category>"+launcher["category"]+"</category>\n")
+                usock.write("\t\t\t<application>"+launcher["application"]+"</application>\n")
+                usock.write("\t\t\t<args>"+launcher["args"]+"</args>\n")
+                usock.write("\t\t\t<rompath>"+launcher["rompath"]+"</rompath>\n")
+                usock.write("\t\t\t<thumbpath>"+launcher["thumbpath"]+"</thumbpath>\n")
+                usock.write("\t\t\t<fanartpath>"+launcher["fanartpath"]+"</fanartpath>\n")
+                usock.write("\t\t\t<trailerpath>"+launcher["trailerpath"]+"</trailerpath>\n")
+                usock.write("\t\t\t<custompath>"+launcher["custompath"]+"</custompath>\n")
+                usock.write("\t\t\t<romext>"+launcher["romext"]+"</romext>\n")
+                usock.write("\t\t\t<platform>"+launcher["gamesys"]+"</platform>\n")
+                usock.write("\t\t\t<thumb>"+launcher["thumb"]+"</thumb>\n")
+                usock.write("\t\t\t<fanart>"+launcher["fanart"]+"</fanart>\n")
+                usock.write("\t\t\t<genre>"+launcher["genre"]+"</genre>\n")
+                usock.write("\t\t\t<release>"+launcher["release"]+"</release>\n")
+                usock.write("\t\t\t<publisher>"+launcher["studio"]+"</publisher>\n")
+                usock.write("\t\t\t<launcherplot>"+launcher["plot"]+"</launcherplot>\n")
+                usock.write("\t\t\t<finished>"+launcher["finished"]+"</finished>\n")
+                usock.write("\t\t\t<minimize>"+launcher["minimize"]+"</minimize>\n")
+                usock.write("\t\t\t<lnk>"+launcher["lnk"]+"</lnk>\n")
                 # Create Items XML list
-                usock.write("\t\t<roms>\n")
+                usock.write("\t\t\t<roms>\n")
                 for romIndex in sorted(launcher["roms"], key= lambda x : launcher["roms"][x]["name"]):
                     romdata = launcher["roms"][romIndex]
-                    usock.write("\t\t\t<rom>\n")
-                    usock.write("\t\t\t\t<id>"+romIndex+"</id>\n")
-                    usock.write("\t\t\t\t<name>"+romdata["name"]+"</name>\n")
-                    usock.write("\t\t\t\t<filename>"+romdata["filename"]+"</filename>\n")
-                    usock.write("\t\t\t\t<thumb>"+romdata["thumb"]+"</thumb>\n")
-                    usock.write("\t\t\t\t<fanart>"+romdata["fanart"]+"</fanart>\n")
-                    usock.write("\t\t\t\t<trailer>"+romdata["trailer"]+"</trailer>\n")
-                    usock.write("\t\t\t\t<custom>"+romdata["custom"]+"</custom>\n")
-                    usock.write("\t\t\t\t<genre>"+romdata["genre"]+"</genre>\n")
-                    usock.write("\t\t\t\t<release>"+romdata["release"]+"</release>\n")
-                    usock.write("\t\t\t\t<publisher>"+romdata["studio"]+"</publisher>\n")
-                    usock.write("\t\t\t\t<gameplot>"+romdata["plot"]+"</gameplot>\n")
-                    usock.write("\t\t\t\t<finished>"+romdata["finished"]+"</finished>\n")
-                    usock.write("\t\t\t\t<altapp>"+romdata["altapp"]+"</altapp>\n")
-                    usock.write("\t\t\t\t<altarg>"+romdata["altarg"]+"</altarg>\n")
-                    usock.write("\t\t\t</rom>\n")
-                usock.write("\t\t</roms>\n")
-                usock.write("\t</launcher>\n")
-            usock.write("</launchers>")
+                    usock.write("\t\t\t\t<rom>\n")
+                    usock.write("\t\t\t\t\t<id>"+romIndex+"</id>\n")
+                    usock.write("\t\t\t\t\t<name>"+romdata["name"]+"</name>\n")
+                    usock.write("\t\t\t\t\t<filename>"+romdata["filename"]+"</filename>\n")
+                    usock.write("\t\t\t\t\t<thumb>"+romdata["thumb"]+"</thumb>\n")
+                    usock.write("\t\t\t\t\t<fanart>"+romdata["fanart"]+"</fanart>\n")
+                    usock.write("\t\t\t\t\t<trailer>"+romdata["trailer"]+"</trailer>\n")
+                    usock.write("\t\t\t\t\t<custom>"+romdata["custom"]+"</custom>\n")
+                    usock.write("\t\t\t\t\t<genre>"+romdata["genre"]+"</genre>\n")
+                    usock.write("\t\t\t\t\t<release>"+romdata["release"]+"</release>\n")
+                    usock.write("\t\t\t\t\t<publisher>"+romdata["studio"]+"</publisher>\n")
+                    usock.write("\t\t\t\t\t<gameplot>"+romdata["plot"]+"</gameplot>\n")
+                    usock.write("\t\t\t\t\t<finished>"+romdata["finished"]+"</finished>\n")
+                    usock.write("\t\t\t\t\t<altapp>"+romdata["altapp"]+"</altapp>\n")
+                    usock.write("\t\t\t\t\t<altarg>"+romdata["altarg"]+"</altarg>\n")
+                    usock.write("\t\t\t\t</rom>\n")
+                usock.write("\t\t\t</roms>\n")
+                usock.write("\t\t</launcher>\n")
+            usock.write("\t</launchers>\n")
+            usock.write("</advanced launcher>")
             usock.close()
             try:
                 shutil.copy2(TEMP_CURRENT_SOURCE_PATH, BASE_CURRENT_SOURCE_PATH)
